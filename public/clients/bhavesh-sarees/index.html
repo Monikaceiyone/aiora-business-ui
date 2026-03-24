@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIORA × Ratanshi Kheraj Sarees — Project Overview</title>
+    <style>
+        :root {
+            --green: #25D366;
+            --green-dark: #128C7E;
+            --blue: #3B82F6;
+            --indigo: #4F46E5;
+            --orange: #F59E0B;
+            --maroon: #B91C1C;
+            --maroon-dark: #7F1D1D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-400: #9CA3AF;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .logo-badge {
+            width: 56px; height: 56px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 700; color: #fff;
+        }
+
+        .logo-aiora { background: linear-gradient(135deg, var(--indigo), #7C3AED); }
+        .logo-client { background: linear-gradient(135deg, var(--maroon-dark), var(--maroon)); }
+
+        .logo-x { color: var(--gray-400); font-size: 20px; font-weight: 300; }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--gray-600);
+        }
+
+        .meta-bar {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .meta-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-maroon { background: var(--maroon); }
+        .dot-blue { background: var(--blue); }
+        .dot-orange { background: var(--orange); }
+
+        .timeline {
+            position: relative;
+            margin: 48px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 28px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gray-200);
+            border-radius: 2px;
+        }
+
+        .phase-card {
+            position: relative;
+            margin-bottom: 32px;
+            padding-left: 72px;
+        }
+
+        .phase-dot {
+            position: absolute;
+            left: 16px;
+            top: 24px;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; color: #fff;
+            z-index: 1;
+        }
+
+        .phase-card .card {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 28px;
+            transition: box-shadow 0.2s;
+        }
+
+        .phase-card .card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .phase-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .badge-green { background: #ECFDF5; color: #065F46; }
+
+        .phase-desc {
+            color: var(--gray-600);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .phase-items {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+
+        .phase-items li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+
+        .phase-items li::before {
+            content: '→';
+            color: var(--gray-400);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .phase-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #fff;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .phase-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .link-green { background: var(--green-dark); }
+
+        .footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-200);
+            color: var(--gray-400);
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 24px; }
+            .meta-bar { gap: 16px; }
+            .phase-card { padding-left: 56px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-row">
+                <div class="logo-badge logo-aiora">A</div>
+                <span class="logo-x">×</span>
+                <div class="logo-badge logo-client">R</div>
+            </div>
+            <h1>WhatsApp Smart Commerce</h1>
+            <p class="subtitle">Custom Project for <strong>Ratanshi Kheraj Sarees</strong></p>
+
+            <div class="meta-bar">
+                <div class="meta-item">
+                    <span class="meta-dot dot-maroon"></span>
+                    Client: Bhavesh
+                </div>
+                <div class="meta-item">
+                    <span class="meta-dot dot-blue"></span>
+                    Business: Sarees & Textiles
+                </div>
+                <div class="meta-item">
+                    <span class="meta-dot dot-orange"></span>
+                    Platform: WhatsApp Business API
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="phase-card">
+                <div class="phase-dot" style="background: var(--green-dark);">1</div>
+                <div class="card">
+                    <div class="phase-header">
+                        <span class="phase-title">Phase 1 — Onboarding</span>
+                        <span class="phase-badge badge-green">Week 1</span>
+                    </div>
+                    <p class="phase-desc">
+                        Get Bhavesh's WhatsApp Business connected to AIORA. We collect all required
+                        documents and credentials, set up the business profile, and verify everything is live.
+                    </p>
+                    <ul class="phase-items">
+                        <li>WhatsApp Business API setup via Embedded Signup</li>
+                        <li>Meta Business Verification (document submission)</li>
+                        <li>Business profile configuration (name, logo, description)</li>
+                        <li>Webhook connectivity test — send & receive messages</li>
+                    </ul>
+                    <a href="phase-1-onboarding.html" class="phase-link link-green">
+                        View Requirements →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            AIORA — Prepared for Ratanshi Kheraj Sarees (Bhavesh Reshamwala) &bull; Feb 2026
+        </div>
+    </div>
+</body>
+</html>

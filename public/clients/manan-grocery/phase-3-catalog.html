@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 3 — Product Catalog | Manan Grocery</title>
+    <style>
+        :root {
+            --orange: #F59E0B;
+            --orange-dark: #D97706;
+            --orange-light: #FFFBEB;
+            --green: #25D366;
+            --green-dark: #128C7E;
+            --blue: #3B82F6;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-400: #9CA3AF;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --red-light: #FEF2F2;
+            --purple-light: #F3E8FF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover { color: var(--gray-900); }
+
+        .phase-tag {
+            display: inline-flex;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--orange-light);
+            color: #92400E;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--gray-600);
+        }
+
+        .timeline-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+
+        .section {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .section h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 .icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .section > p {
+            color: var(--gray-600);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .alert-orange {
+            background: var(--orange-light);
+            border: 1px solid #FDE68A;
+        }
+
+        .alert-orange h3 { color: #92400E; font-size: 15px; margin-bottom: 8px; }
+        .alert-orange p { color: #78350F; font-size: 14px; margin: 0; }
+
+        .alert-green {
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+        }
+
+        .alert-green h3 { color: #065F46; font-size: 15px; margin-bottom: 8px; }
+        .alert-green p { color: #047857; font-size: 14px; margin: 0; }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 15px;
+        }
+
+        .checklist li:last-child { border-bottom: none; }
+
+        .check-box {
+            width: 22px; height: 22px;
+            border: 2px solid var(--gray-300);
+            border-radius: 6px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .item-content { flex: 1; }
+
+        .item-label {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .item-desc {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .item-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .tag-required { background: var(--red-light); color: #991B1B; }
+        .tag-from-manan { background: #EFF6FF; color: #1E40AF; }
+        .tag-recommended { background: var(--orange-light); color: #92400E; }
+        .tag-optional { background: var(--gray-100); color: var(--gray-600); }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .cat-chip {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .cat-chip .emoji { font-size: 24px; display: block; margin-bottom: 6px; }
+        .cat-chip .name { font-weight: 600; color: var(--gray-700); }
+
+        .data-format {
+            background: var(--gray-900);
+            border-radius: 12px;
+            padding: 24px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #E5E7EB;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .data-format .green { color: #6EE7B7; }
+        .data-format .blue { color: #93C5FD; }
+        .data-format .amber { color: #FCD34D; }
+        .data-format .gray { color: #6B7280; }
+        .data-format .purple { color: #C4B5FD; }
+
+        .feature-box {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .feature-box h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+        }
+
+        .feature-box p {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .example-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .example-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 12px;
+        }
+
+        .chat-bubble {
+            background: #DCF8C6;
+            border-radius: 12px 12px 12px 4px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+            max-width: 90%;
+        }
+
+        .chat-bubble.bot {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px 12px 4px 12px;
+            margin-left: auto;
+        }
+
+        .chat-bubble .label {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--gray-400);
+            font-size: 13px;
+        }
+
+        .footer a { text-decoration: none; }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 22px; }
+            .two-col { grid-template-columns: 1fr; }
+            .section { padding: 20px; }
+            .category-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Project Overview</a>
+
+        <div style="margin-bottom: 40px;">
+            <div class="phase-tag">Phase 3</div>
+            <h1>Product Catalog</h1>
+            <p class="page-subtitle">
+                Full digital product catalog — customers browse, search, and order
+                Manan's grocery inventory directly on WhatsApp.
+            </p>
+            <div class="timeline-badge">
+                🗓 Estimated: <strong>&nbsp;Week 2</strong>&nbsp; (follows onboarding + OCR/Voice)
+            </div>
+        </div>
+
+        <div class="alert alert-orange">
+            <h3>Why This Phase Matters Most</h3>
+            <p>
+                The catalog is the backbone of everything — OCR matching, voice note matching,
+                and direct ordering all depend on having a complete, clean product catalog.
+                The better the catalog data, the better everything else works.
+            </p>
+        </div>
+
+        <!-- What We Build -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: var(--orange-light); color: var(--orange-dark);">🛒</span>
+                What The Customer Gets
+            </h2>
+            <p>Multiple ways to discover and order products via WhatsApp.</p>
+
+            <div class="two-col">
+                <div class="example-card">
+                    <h4>Browse Catalog</h4>
+                    <div class="chat-bubble">
+                        <div class="label">👤 Customer</div>
+                        Show me your catalog
+                    </div>
+                    <div class="chat-bubble bot">
+                        <div class="label">🤖 AIORA</div>
+                        Here's our full catalog! 📄<br>
+                        <em>(PDF attached with all products, prices, and images)</em><br><br>
+                        Or tell me a category:<br>
+                        🫘 Pulses &amp; Dal<br>
+                        🫒 Oils &amp; Ghee<br>
+                        🌾 Atta &amp; Flour<br>
+                        🧂 Spices<br>
+                        🧹 Household
+                    </div>
+                </div>
+                <div class="example-card">
+                    <h4>Search &amp; Order</h4>
+                    <div class="chat-bubble">
+                        <div class="label">👤 Customer</div>
+                        Show me dal options
+                    </div>
+                    <div class="chat-bubble bot">
+                        <div class="label">🤖 AIORA</div>
+                        <strong>🫘 Pulses &amp; Dal:</strong><br><br>
+                        1. Toor Dal 1kg — ₹160<br>
+                        2. Moong Dal 1kg — ₹140<br>
+                        3. Chana Dal 1kg — ₹120<br>
+                        4. Masoor Dal 1kg — ₹110<br>
+                        5. Urad Dal 1kg — ₹180<br><br>
+                        Reply with item number and quantity.<br>
+                        E.g., "1 — 2kg"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typical Grocery Categories -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: #ECFDF5; color: #059669;">📂</span>
+                Typical Grocery Categories
+            </h2>
+            <p>We'll organize Manan's products into these categories (can be customized):</p>
+
+            <div class="category-grid">
+                <div class="cat-chip">
+                    <span class="emoji">🌾</span>
+                    <span class="name">Atta & Flour</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🍚</span>
+                    <span class="name">Rice</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🫘</span>
+                    <span class="name">Pulses & Dal</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🫒</span>
+                    <span class="name">Oils & Ghee</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🧂</span>
+                    <span class="name">Spices & Masala</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🍬</span>
+                    <span class="name">Sugar & Salt</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🫖</span>
+                    <span class="name">Tea & Coffee</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🥛</span>
+                    <span class="name">Dairy</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🍪</span>
+                    <span class="name">Snacks & Biscuits</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🧴</span>
+                    <span class="name">Personal Care</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🧹</span>
+                    <span class="name">Household</span>
+                </div>
+                <div class="cat-chip">
+                    <span class="emoji">🥤</span>
+                    <span class="name">Beverages</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- What We Need From Manan -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: var(--orange-light); color: var(--orange-dark);">📦</span>
+                What We Need From Manan
+            </h2>
+            <p>This is the most important data — the quality of the catalog determines the quality of the entire system.</p>
+
+            <ul class="checklist">
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Full Product Inventory
+                            <span class="item-tag tag-required">Required</span>
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            Complete list of all products sold. For each product we need:
+                        </div>
+                        <div class="data-format" style="margin-top: 12px;">
+                            <span class="gray">Per product, we need:</span><br><br>
+                            <span class="green">Product Name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">e.g., "Aashirvaad Atta"</span><br>
+                            <span class="green">Brand</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">e.g., "Aashirvaad"</span><br>
+                            <span class="green">Category</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">e.g., "Atta & Flour"</span><br>
+                            <span class="amber">Size / Weight</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">e.g., "1kg", "5kg", "500g"</span><br>
+                            <span class="amber">Price (₹)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">e.g., "₹90", "₹420"</span><br>
+                            <span class="blue">In Stock?</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">Yes / No</span><br>
+                            <span class="purple">Product Photo</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">(optional but recommended)</span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Product Photos
+                            <span class="item-tag tag-recommended">Recommended</span>
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            Photos of products on shelves or individually. Doesn't need to be professional —
+                            phone camera photos are fine. These are used in the PDF catalog and WhatsApp messages.
+                            If not available, we'll use stock product images.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Delivery / Pickup Rules
+                            <span class="item-tag tag-required">Required</span>
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            How does Manan deliver orders?
+                            <ul style="margin-top: 6px; margin-left: 16px; font-size: 13px; color: var(--gray-600);">
+                                <li>Home delivery? If yes, which areas/PIN codes?</li>
+                                <li>Delivery charges? (free above ₹X, or flat rate?)</li>
+                                <li>Minimum order amount?</li>
+                                <li>Store pickup option?</li>
+                                <li>Delivery time slots? (e.g., "Morning 9-12", "Evening 4-7")</li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Payment Methods Accepted
+                            <span class="item-tag tag-required">Required</span>
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            Cash on delivery? UPI (Google Pay / PhonePe)? Online payment link (Razorpay)?
+                            We'll configure the order confirmation flow based on this.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Order Notification Preference
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            How should Manan receive new orders? WhatsApp notification? Dashboard alert?
+                            SMS? Email? We'll set up the notification channel he prefers.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Existing Rate Card / Price List
+                            <span class="item-tag tag-optional">Optional</span>
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            If Manan already has a printed rate card, menu, or price list (even a photo of it),
+                            share it. We'll digitize it — saves Manan from having to type everything out.
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Acceptable Data Formats -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: #EFF6FF; color: var(--blue);">📋</span>
+                How To Share Product Data
+            </h2>
+            <p>Manan can share product data in ANY format — we'll handle the rest.</p>
+
+            <div class="feature-box">
+                <h3>Option 1: Excel / Google Sheet (Best)</h3>
+                <p>
+                    Simple spreadsheet with columns: Product Name, Brand, Category, Size, Price, In Stock.
+                    We can share a template if needed.
+                </p>
+            </div>
+            <div class="feature-box">
+                <h3>Option 2: Photos of Rate Card / Shelves</h3>
+                <p>
+                    Just take photos of the existing rate card or product shelves.
+                    We'll use OCR to extract and digitize everything.
+                </p>
+            </div>
+            <div class="feature-box">
+                <h3>Option 3: Voice / WhatsApp Messages</h3>
+                <p>
+                    Manan can literally send voice notes listing products and prices.
+                    We'll transcribe and organize them. Easiest option if typing isn't preferred.
+                </p>
+            </div>
+            <div class="feature-box">
+                <h3>Option 4: Existing PDF / Printed List</h3>
+                <p>
+                    Any existing document — printed price list, supplier catalog, POS export.
+                    We'll extract and clean the data.
+                </p>
+            </div>
+        </div>
+
+        <!-- What AIORA Builds -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: var(--purple-light); color: #7C3AED;">🔧</span>
+                What AIORA Builds
+            </h2>
+
+            <div class="feature-box">
+                <h3>Digital Catalog Database</h3>
+                <p>
+                    All products stored in a structured database with categories, aliases, pricing,
+                    and stock status. Powers OCR matching, voice matching, and WhatsApp browsing.
+                </p>
+            </div>
+            <div class="feature-box">
+                <h3>PDF Catalog Generator</h3>
+                <p>
+                    Auto-generated PDF catalog with product images, prices, and categories.
+                    Sent to customers on WhatsApp when they ask for the catalog. Regenerates
+                    automatically when products or prices change.
+                </p>
+            </div>
+            <div class="feature-box">
+                <h3>WhatsApp Browsing</h3>
+                <p>
+                    Customers can browse by category, search by product name, and get recommendations.
+                    The AI agent understands natural language queries like "show me cooking oils under 200".
+                </p>
+            </div>
+            <div class="feature-box">
+                <h3>Stock Management</h3>
+                <p>
+                    Simple stock in/out tracking. When products go out of stock, they're marked
+                    in the catalog and the AI tells customers immediately. Manan can update stock
+                    via the dashboard or even via WhatsApp.
+                </p>
+            </div>
+            <div class="feature-box">
+                <h3>Price Update System</h3>
+                <p>
+                    Grocery prices change frequently. We'll build a quick-update system so
+                    Manan can update prices easily from his phone without technical hassle.
+                </p>
+            </div>
+        </div>
+
+        <div class="alert alert-green">
+            <h3>The Catalog Powers Everything</h3>
+            <p>
+                Once the catalog is loaded, all three features come together:
+                <strong>OCR</strong> matches photos against it,
+                <strong>Voice Notes</strong> match spoken items against it, and
+                <strong>browsing/ordering</strong> lets customers explore it directly.
+                One data source, three powerful channels.
+            </p>
+        </div>
+
+        <div class="footer">
+            <a href="phase-2-ocr-voice.html" style="color: var(--gray-600);">← Phase 2: OCR & Voice</a>
+            &nbsp;&bull;&nbsp;
+            <a href="index.html" style="color: var(--gray-600);">Project Overview</a>
+            &nbsp;&bull;&nbsp;
+            <span style="color: var(--orange-dark); font-weight: 600;">Final Phase ✓</span>
+        </div>
+    </div>
+</body>
+</html>

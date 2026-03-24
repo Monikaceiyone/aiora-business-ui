@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 2 — OCR & Voice Notes | Manan Grocery</title>
+    <style>
+        :root {
+            --blue: #3B82F6;
+            --blue-dark: #2563EB;
+            --blue-light: #EFF6FF;
+            --green: #25D366;
+            --green-dark: #128C7E;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-400: #9CA3AF;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --red-light: #FEF2F2;
+            --amber-light: #FFFBEB;
+            --purple-light: #F3E8FF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover { color: var(--gray-900); }
+
+        .phase-tag {
+            display: inline-flex;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--blue-light);
+            color: #1E40AF;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--gray-600);
+        }
+
+        .timeline-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+
+        .section {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .section h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 .icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .section > p {
+            color: var(--gray-600);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .feature-box {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .feature-box h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+        }
+
+        .feature-box p {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .flow-diagram {
+            background: var(--gray-900);
+            color: #E5E7EB;
+            border-radius: 12px;
+            padding: 24px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .flow-diagram .green { color: #6EE7B7; }
+        .flow-diagram .blue { color: #93C5FD; }
+        .flow-diagram .amber { color: #FCD34D; }
+        .flow-diagram .gray { color: #6B7280; }
+        .flow-diagram .purple { color: #C4B5FD; }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 15px;
+        }
+
+        .checklist li:last-child { border-bottom: none; }
+
+        .check-box {
+            width: 22px; height: 22px;
+            border: 2px solid var(--gray-300);
+            border-radius: 6px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .item-content { flex: 1; }
+
+        .item-label {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .item-desc {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .item-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .tag-required { background: var(--red-light); color: #991B1B; }
+        .tag-from-manan { background: var(--blue-light); color: #1E40AF; }
+        .tag-aiora { background: var(--purple-light); color: #6D28D9; }
+
+        .alert {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .alert-blue {
+            background: var(--blue-light);
+            border: 1px solid #BFDBFE;
+        }
+
+        .alert-blue h3 { color: #1E40AF; font-size: 15px; margin-bottom: 8px; }
+        .alert-blue p { color: #1E3A8A; font-size: 14px; margin: 0; }
+
+        .alert-amber {
+            background: var(--amber-light);
+            border: 1px solid #FDE68A;
+        }
+
+        .alert-amber h3 { color: #92400E; font-size: 15px; margin-bottom: 8px; }
+        .alert-amber p { color: #78350F; font-size: 14px; margin: 0; }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .example-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .example-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 12px;
+        }
+
+        .chat-bubble {
+            background: #DCF8C6;
+            border-radius: 12px 12px 12px 4px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+            max-width: 85%;
+        }
+
+        .chat-bubble.bot {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px 12px 4px 12px;
+            margin-left: auto;
+        }
+
+        .chat-bubble .label {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--gray-400);
+            font-size: 13px;
+        }
+
+        .footer a {
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 22px; }
+            .two-col { grid-template-columns: 1fr; }
+            .section { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Project Overview</a>
+
+        <div style="margin-bottom: 40px;">
+            <div class="phase-tag">Phase 2</div>
+            <h1>OCR & Voice Notes</h1>
+            <p class="page-subtitle">
+                Customers send a photo of their grocery list or a voice message — the system reads it,
+                matches items, and creates an order.
+            </p>
+            <div class="timeline-badge">
+                🗓 Estimated: <strong>&nbsp;Week 1</strong>&nbsp; (parallel with Onboarding)
+            </div>
+        </div>
+
+        <!-- What It Does -->
+        <div class="alert alert-blue">
+            <h3>What The Customer Experiences</h3>
+            <p>
+                A customer sends a <strong>photo of their handwritten grocery list</strong> or a
+                <strong>voice note saying "2 kg aata, 1 litre oil, toor dal"</strong> on WhatsApp.
+                Within seconds, the system reads it, matches items to Manan's product catalog, and sends
+                back a clean order summary with prices for confirmation.
+            </p>
+        </div>
+
+        <!-- OCR Section -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: var(--blue-light); color: var(--blue);">📸</span>
+                OCR — Photo-to-Order
+            </h2>
+            <p>Customer sends a photo of a grocery list → system extracts items → matches to catalog → creates order.</p>
+
+            <div class="flow-diagram">
+                <span class="gray">Customer sends photo on WhatsApp</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="green">WhatsApp Webhook receives image</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="blue">Download image via Media API</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="blue">OCR Engine (GPT-4o Vision)</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ Extracts: item names, quantities, units<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ Handles: handwritten, printed, Hindi, English<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="purple">Fuzzy Match → Manan's product catalog</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ "aata 2kg" → "Aashirvaad Atta 2kg — ₹180"<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ "tel" → "Fortune Sunflower Oil 1L — ₹145"<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="amber">Send order summary on WhatsApp</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ Matched items + prices + total<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ Unmatched items flagged<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="green">Customer confirms → Order created</span>
+            </div>
+
+            <div class="two-col" style="margin-top: 20px;">
+                <div class="example-card">
+                    <h4>Customer Sends</h4>
+                    <div class="chat-bubble">
+                        <div class="label">📷 Photo</div>
+                        Handwritten list:<br>
+                        - Aata 2kg<br>
+                        - Toor Dal 1kg<br>
+                        - Tel 1L<br>
+                        - Chini 2kg<br>
+                        - Doodh 2 packet
+                    </div>
+                </div>
+                <div class="example-card">
+                    <h4>System Responds</h4>
+                    <div class="chat-bubble bot">
+                        <div class="label">🤖 AIORA</div>
+                        <strong>📋 Your Grocery Order:</strong><br><br>
+                        ✅ Aashirvaad Atta 2kg — ₹180<br>
+                        ✅ Toor Dal 1kg — ₹160<br>
+                        ✅ Fortune Oil 1L — ₹145<br>
+                        ✅ Sugar 2kg — ₹90<br>
+                        ❓ "Doodh 2 packet" — not in catalog<br><br>
+                        <strong>Total: ₹575</strong><br><br>
+                        Reply <strong>OK</strong> to confirm or <strong>EDIT</strong> to change.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice Notes Section -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: #ECFDF5; color: #059669;">🎙️</span>
+                Voice Notes — Speech-to-Order
+            </h2>
+            <p>Customer sends a voice message → system transcribes → extracts items → matches to catalog.</p>
+
+            <div class="flow-diagram">
+                <span class="gray">Customer sends voice note on WhatsApp</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ "Bhaiya 2 kilo aata, ek litre tel,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│  aur toor dal ek kilo bhej do"<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="green">WhatsApp Webhook receives audio</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="blue">Download audio via Media API</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="blue">OpenAI Whisper (speech-to-text)</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ Supports: Hindi, English, Hinglish<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ Output: "2 kilo aata, ek litre tel,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│          toor dal ek kilo"<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="purple">GPT-4o: Extract items + quantities</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│ Structured: [{item: "aata", qty: 2, unit: "kg"}, ...]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="purple">Fuzzy Match → Manan's product catalog</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="amber">Send order summary on WhatsApp</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                <span class="green">Customer confirms → Order created</span>
+            </div>
+        </div>
+
+        <!-- What We Need From Manan -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: var(--amber-light); color: #D97706;">📦</span>
+                What We Need From Manan
+            </h2>
+            <p>For OCR and Voice to work, we need to match extracted items against Manan's actual product catalog.</p>
+
+            <ul class="checklist">
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Complete Product List (with prices)
+                            <span class="item-tag tag-required">Required</span>
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            Every product Manan sells with: <strong>name, price, available sizes/weights, category</strong>.
+                            Can be an Excel sheet, Google Sheet, PDF, or even photos of the rate card — we'll digitize it.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Common Local Names / Aliases
+                            <span class="item-tag tag-required">Required</span>
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            Local/Hindi names customers commonly use. E.g., "Tel" = Cooking Oil, "Besan" = Gram Flour,
+                            "Maida" = All-Purpose Flour, "Doodh" = Milk. We'll build an alias mapping for fuzzy matching.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            5–10 Sample Grocery Lists
+                            <span class="item-tag tag-required">Required</span>
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            Real grocery lists from actual customers (photos of handwritten notes, WhatsApp messages, etc.).
+                            These help us train and test the OCR accuracy for Manan's specific customer base and handwriting styles.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Typical Customer Languages
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            Do customers usually speak in Hindi, English, or Hinglish? Do any write lists in regional languages?
+                            This helps us tune the OCR and voice models.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Default Quantities / Sizes
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            When someone says "aata" without specifying a size, what should be the default?
+                            E.g., Atta defaults to 5kg, Oil to 1L, Dal to 1kg. These help resolve ambiguous orders.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="check-box"></div>
+                    <div class="item-content">
+                        <div class="item-label">
+                            Brand Preferences
+                            <span class="item-tag tag-from-manan">From Manan</span>
+                        </div>
+                        <div class="item-desc">
+                            Does Manan stock specific brands? If customer says "oil", does he send Fortune, Saffola, or loose?
+                            We need default brand rules for common items.
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- What AIORA Builds -->
+        <div class="section">
+            <h2>
+                <span class="icon" style="background: var(--purple-light); color: #7C3AED;">🔧</span>
+                What AIORA Builds
+            </h2>
+            <p>All technical work is handled by us.</p>
+
+            <div class="feature-box">
+                <h3>OCR Pipeline</h3>
+                <p>
+                    Image download from WhatsApp → GPT-4o Vision for text extraction (handles handwritten Hindi/English)
+                    → Structured item+quantity parsing → Fuzzy catalog matching with alias support → Order summary generation.
+                </p>
+            </div>
+
+            <div class="feature-box">
+                <h3>Voice Pipeline</h3>
+                <p>
+                    Audio download from WhatsApp → OpenAI Whisper transcription (Hindi/English/Hinglish)
+                    → GPT-4o for structured item extraction → Same fuzzy matching and order flow as OCR.
+                </p>
+            </div>
+
+            <div class="feature-box">
+                <h3>Smart Matching Engine</h3>
+                <p>
+                    Fuzzy search with alias mapping. Handles misspellings ("aata" / "atta" / "आटा"),
+                    brand inference, quantity normalization ("ek kilo" → 1kg), and ambiguity resolution.
+                    Unmatched items are flagged for the customer to clarify.
+                </p>
+            </div>
+
+            <div class="feature-box">
+                <h3>Order Confirmation Flow</h3>
+                <p>
+                    After matching, sends a formatted order summary on WhatsApp. Customer can confirm,
+                    edit items, or cancel. Confirmed orders go into Manan's order queue.
+                </p>
+            </div>
+        </div>
+
+        <!-- Accuracy Note -->
+        <div class="alert alert-amber">
+            <h3>About Accuracy</h3>
+            <p>
+                OCR on handwritten lists is ~85-95% accurate depending on handwriting clarity.
+                Voice notes are ~95%+ accurate for Hindi and English.
+                The system always asks for confirmation before placing an order, so any misreads
+                are caught before checkout. Accuracy improves over time as we tune the alias mappings.
+            </p>
+        </div>
+
+        <div class="footer">
+            <a href="phase-1-onboarding.html" style="color: var(--gray-600);">← Phase 1: Onboarding</a>
+            &nbsp;&bull;&nbsp;
+            <a href="index.html" style="color: var(--gray-600);">Project Overview</a>
+            &nbsp;&bull;&nbsp;
+            <a href="phase-3-catalog.html" style="color: var(--blue); font-weight: 600;">Next: Phase 3 — Catalog →</a>
+        </div>
+    </div>
+</body>
+</html>
