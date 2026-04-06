@@ -77,94 +77,104 @@ export default function CommencePage() {
 
     return (
         <div className="w-full bg-white overflow-x-hidden">
-            {/* Hero */}
-            <section className="relative px-6 md:px-12 pt-4 pb-8 max-w-6xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-4"
+            {/* Hero — full-viewport background video */}
+            <section className="mx-2 relative w-full h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden">
+                {/* Background video */}
+                <video
+                    ref={videoRef}
+                    src="/videos/intro.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                    controls={false}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ backgroundImage: 'url(/hero-banner.png)', backgroundSize: 'cover' }}
+                    onLoadedData={() => {
+                        if (videoRef.current) videoRef.current.play().catch(() => {});
+                    }}
+                />
+
+                {/* Dark overlay */}
+                <div className="absolute inset-0 bg-black/60" />
+
+                {/* Mute toggle */}
+                <button
+                    onClick={toggleMute}
+                    className="absolute top-5 right-5 z-20 text-white/80 hover:text-white transition-colors p-2.5 bg-black/40 backdrop-blur-md rounded-full"
+                    aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                 >
-                    <p className="text-sm uppercase tracking-[0.3em] text-gray-400 font-medium">
+                    {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                </button>
+
+                {/* Overlay content */}
+                <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-12 max-w-4xl mx-auto">
+                    {/* <motion.p
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-sm uppercase tracking-[0.3em] text-white/60 font-medium mb-4"
+                    >
                         the ai platform for real businesses
-                    </p>
-                </motion.div>
+                    </motion.p> */}
 
-                {/* Video */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.15 }}
-                    className="relative w-full max-w-4xl mx-auto mb-6"
-                >
-                    <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-2xl">
-                        <video
-                            ref={videoRef}
-                            src="/videos/intro.mp4"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="auto"
-                            controls={false}
-                            className="w-full h-auto"
-                            onLoadedData={() => {
-                                if (videoRef.current) videoRef.current.play().catch(() => {});
-                            }}
-                        />
-                        <button
-                            onClick={toggleMute}
-                            className="absolute top-4 right-4 z-20 text-white/80 hover:text-white transition-colors p-2.5 bg-black/40 backdrop-blur-md rounded-full"
-                        >
-                            {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-                        </button>
-                    </div>
-                </motion.div>
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.55, delay: 0.1 }}
+                        className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-tight mb-5"
+                    >
+                        The AI Platform for<br className="hidden sm:block" /> Real Businesses
+                    </motion.h1>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className="text-center mb-6"
-                >
-                    <p className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.22 }}
+                        className="text-white/70 text-base md:text-lg max-w-2xl leading-relaxed mb-8"
+                    >
                         AI-powered voice agents, WhatsApp automation, and smart commerce —
                         built for businesses that want to scale without hiring an army.
-                    </p>
+                    </motion.p>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.34 }}
+                        className="flex flex-col sm:flex-row items-center justify-center gap-3"
+                    >
                         <a
                             href="/connect"
-                            className="group flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-full font-bold text-base hover:bg-gray-800 transition-all duration-300 shadow-lg"
+                            className="group flex items-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-full font-bold text-base hover:bg-gray-100 transition-all duration-300 shadow-lg"
                         >
                             get started
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </a>
                         <a
                             href="/core-suite"
-                            className="flex items-center gap-2 text-gray-500 hover:text-gray-900 px-6 py-4 text-base font-medium transition-colors"
+                            className="flex items-center gap-2 text-white/70 hover:text-white px-6 py-4 text-base font-medium transition-colors"
                         >
                             explore core suite
                             <ChevronRight className="w-4 h-4" />
                         </a>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </div>
 
-                {/* Stats Bar */}
+                {/* Stats bar pinned to bottom of hero */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto border border-gray-200 rounded-2xl p-5 bg-gray-50/80"
+                    transition={{ duration: 0.6, delay: 0.45 }}
+                    className="absolute bottom-0 left-0 right-0 z-10 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10 border-t border-white/10 bg-black/40 backdrop-blur-md"
                 >
                     {stats.map((s) => (
-                        <div key={s.label} className="text-center">
-                            <div className="text-2xl md:text-3xl font-black text-gray-900">{s.value}</div>
-                            <div className="text-xs text-gray-400 mt-1 uppercase tracking-wider">{s.label}</div>
+                        <div key={s.label} className="text-center py-4 px-2">
+                            <div className="text-2xl md:text-3xl font-black text-white">{s.value}</div>
+                            <div className="text-xs text-white/50 mt-1 uppercase tracking-wider">{s.label}</div>
                         </div>
                     ))}
                 </motion.div>
-
             </section>
 
             {/* Divider */}
