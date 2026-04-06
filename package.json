@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "build": "rm -rf .next && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
