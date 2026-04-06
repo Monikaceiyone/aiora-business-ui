@@ -6,13 +6,13 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
-const tabs: { name: string; href: string; forceRefresh?: boolean; comingSoon?: boolean }[] = [
-    { name: 'commence', href: 'https://www.aiora.live/', forceRefresh: true },
-    { name: 'core suite', href: 'https://www.aiora.live/core-suite' },
-    { name: 'configurations', href: 'https://www.aiora.live/configurations' },
-    { name: 'costing', href: 'https://www.aiora.live/costing' },
-    { name: 'connect', href: 'https://www.aiora.live/connect' },
-    { name: 'command center', href: 'https://dashboard.aiora.live' },
+const tabs: { name: string; href: string; forceRefresh?: boolean; comingSoon?: boolean; external?: boolean }[] = [
+    { name: 'commence', href: '/' },
+    { name: 'core suite', href: '/core-suite' },
+    { name: 'configurations', href: '/configurations' },
+    { name: 'costing', href: '/costing' },
+    { name: 'connect', href: '/connect' },
+    { name: 'command center', href: '/dashboard', external: false },
 ];
 
 export function Navigation() {
@@ -22,17 +22,13 @@ export function Navigation() {
 
     const isActive = (href: string) => {
         if (href === '/') return pathname === '/';
-        return pathname === href;
+        return pathname.startsWith(href);
     };
 
     const handleClick = (e: React.MouseEvent, tab: typeof tabs[0]) => {
         if (tab.comingSoon) {
             e.preventDefault();
             return;
-        }
-        if (tab.forceRefresh) {
-            e.preventDefault();
-            window.location.href = tab.href;
         }
         setIsMobileMenuOpen(false);
     };
