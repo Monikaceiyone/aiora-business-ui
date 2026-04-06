@@ -7,11 +7,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
 const tabs: { name: string; href: string; forceRefresh?: boolean; comingSoon?: boolean }[] = [
-    { name: 'commence', href: 'https://aiora-business-ui-1ylz.vercel.app/', forceRefresh: true },
-    { name: 'core suite', href: 'https://aiora-business-ui-1ylz.vercel.app/core-suite' },
-    { name: 'configurations', href: 'https://aiora-business-ui-1ylz.vercel.app/configurations' },
-    { name: 'costing', href: 'https://www.aiora.live/costing' },
-    { name: 'connect', href: 'https://www.aiora.live/connect' },
+    { name: 'commence', href: 'https://aiora-business-ui-pdej.vercel.app/', forceRefresh: true },
+    { name: 'core suite', href: 'https://aiora-business-ui-pdej.vercel.app/core-suite' },
+    { name: 'configurations', href: 'https://aiora-business-ui-pdej.vercel.app/configurations' },
+    { name: 'costing', href: 'https://aiora-business-ui-pdej.vercel.app/costing' },
+    { name: 'connect', href: 'https://aiora-business-ui-pdej.vercel.app/connect' },
     { name: 'command center', href: 'https://dashboard.aiora.live' },
 ];
 
