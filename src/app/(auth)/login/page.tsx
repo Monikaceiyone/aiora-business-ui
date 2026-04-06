@@ -47,21 +47,26 @@ export default function LoginPage() {
   }, [router, notMapped]);
 
   const handleGoogleLogin = async () => {
-    debugger
-    setError('');
-    setLoading(true);
+    // debugger
+    // setError('');
+    // setLoading(true);
 
-    const redirectTo = `
-https://mock-project.supabase.co/auth/v1/authorize?provider=google&redirect_to=adjfbsfsorddqbndyrhq.supabase.co/auth/v1/callback`;
-    const { error: signInError } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo },
-    });
+    // const redirectTo = `${window.location.origin}/auth/callback?next=/dashboard`;
+    // const { error: signInError } = await supabase.auth.signInWithOAuth({
+    //   provider: 'google',
+    //   opt
+          const accessToken = "dev-test-token-12345";
+          const phoneNumber = "9876543210";
 
-    if (signInError) {
-      setError(signInError.message || 'Google sign-in failed');
-      setLoading(false);
-    }
+       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/link-seller`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ phoneNumber }),
+      });
+      console.log(response,"response");
   };
 
   const handleSignOutCurrentGoogle = async () => {
@@ -85,7 +90,7 @@ https://mock-project.supabase.co/auth/v1/authorize?provider=google&redirect_to=a
         return;
       }
 
-      const response = await fetch('/api/auth/link-seller', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/link-seller`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

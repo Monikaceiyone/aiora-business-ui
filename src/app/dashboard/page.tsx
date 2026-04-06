@@ -1,5 +1,6 @@
 'use client';
 
+import UIDashboard from '@/ui-dashboard';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
@@ -44,6 +45,7 @@ export default function DashboardHome() {
             loadStats(storedSellerId);
         }
     }, []);
+    
 
     const loadStats = async (sellerId: string) => {
         setLoading(true);
@@ -128,13 +130,14 @@ export default function DashboardHome() {
     return (
         <div className="space-y-8">
             {/* Welcome Section */}
+{/*             
             <div>
                 <h1 className="text-2xl font-bold text-gray-900">Welcome back, {sellerName}! 👋</h1>
                 <p className="text-gray-500 mt-1">Here's what's happening with your business today.</p>
-            </div>
+            </div> */}
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Card className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
                     <CardContent className="p-6">
                         <div className="flex items-center justify-between">
@@ -186,10 +189,11 @@ export default function DashboardHome() {
                         <p className="text-gray-500 text-sm mt-2">Repair orders</p>
                     </CardContent>
                 </Card>
-            </div>
+            </div> */}
 
             {/* Quick Links */}
-            <div>
+
+            {/* <div>
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Access</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {quickLinks.map((link) => (
@@ -214,7 +218,8 @@ export default function DashboardHome() {
                         </Link>
                     ))}
                 </div>
-            </div>
+            </div> */}
+             <UIDashboard />
         </div>
     );
 }

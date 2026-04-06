@@ -1,5 +1,5 @@
 // API Client for communicating with the backend
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = 'http://192.168.3.131:4000';
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -97,6 +97,38 @@ class ApiClient {
       body: formData,
       headers: {}, // Let browser set Content-Type for FormData
     });
+  }
+
+  // Dashboard / data endpoints
+  async getDashboardStats(sellerId: string) {
+    return this.request(`/dashboard/stats?seller_id=${sellerId}`);
+  }
+
+  async getOrders(sellerId: string) {
+    return this.request(`/orders?seller_id=${sellerId}`);
+  }
+
+  async getServiceOrders(sellerId: string) {
+    return this.request(`/service-orders?seller_id=${sellerId}`);
+  }
+
+  async getCatalog(sellerId: string) {
+    return this.request(`/catalog?seller_id=${sellerId}`);
+  }
+
+  async saveCatalogItem(sellerId: string, item: any) {
+    return this.request('/catalog', {
+      method: 'POST',
+      body: JSON.stringify({ seller_id: sellerId, ...item }),
+    });
+  }
+
+  async deleteCatalogItem(itemId: string) {
+    return this.request(`/catalog/${itemId}`, { method: 'DELETE' });
+  }
+
+  async getSeller(sellerId: string) {
+    return this.request(`/sellers/${sellerId}`);
   }
 
   // Order endpoints

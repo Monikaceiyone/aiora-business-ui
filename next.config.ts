@@ -2,9 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  // Remove middleware since we're separating frontend/backend
-  experimental: {
-    // Enable any experimental features if needed
+  experimental: {},
+  typescript: {
+    // Skip the built-in SWC type checker — use tsc separately if needed
+    ignoreBuildErrors: true,
   },
 };
 

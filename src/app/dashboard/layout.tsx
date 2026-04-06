@@ -23,6 +23,7 @@ export default function DashboardLayout({
 
     // Check authentication on mount
     useEffect(() => {
+        
         const checkAuth = async () => {
             // ── Dev mode bypass ──────────────────────────────────────────────
             if (DEV_AUTH_ENABLED) {
@@ -37,8 +38,8 @@ export default function DashboardLayout({
             const { data: sessionData } = await supabase.auth.getSession();
             const accessToken = sessionData.session?.access_token;
 
-            if (!accessToken) {
-                const magicResponse = await fetch('/api/auth/magic-session');
+            // if (!accessToken) {
+                const magicResponse = await fetch(`/api/auth/magic-session`);
                 if (magicResponse.ok) {
                     const magic = await magicResponse.json();
                     localStorage.setItem('isLoggedIn', 'true');
@@ -50,9 +51,9 @@ export default function DashboardLayout({
                 }
                 router.push('/login');
                 return;
-            }
+            // }
 
-            const response = await fetch('/api/auth/seller-context', {
+            const response = await fetch('http://192.168.3.131:4000/api/auth/seller-context', {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
@@ -92,6 +93,15 @@ export default function DashboardLayout({
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
     }, [router]);
+
+useEffect(() => {
+    const fetchMagicSession = async () => {
+        const magicResponse = await fetch(`/api/auth/magic-session`);
+    console.log(magicResponse,"magicResponse")
+    };
+    fetchMagicSession();
+}, []);
+
 
     // Check if mobile on mount and resize
     useEffect(() => {

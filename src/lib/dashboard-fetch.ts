@@ -14,7 +14,7 @@ export async function dashboardFetch(
   // On the server we need an absolute URL; on the client relative is fine.
   const base =
     typeof window === 'undefined'
-      ? (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000')
+      ? (process.env.NEXT_PUBLIC_APP_URL ?? 'http://192.168.3.131:4000')
       : '';
 
   const url = path.startsWith('http') ? path : `${base}${path}`;
