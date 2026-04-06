@@ -38,7 +38,7 @@ export default function DashboardLayout({
             const { data: sessionData } = await supabase.auth.getSession();
             const accessToken = sessionData.session?.access_token;
 
-            if (!accessToken) {
+            // if (!accessToken) {
                 const magicResponse = await fetch(`/api/auth/magic-session`);
                 if (magicResponse.ok) {
                     const magic = await magicResponse.json();
@@ -51,10 +51,9 @@ export default function DashboardLayout({
                 }
                 router.push('/login');
                 return;
-            }
+            // }
 
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-            const response = await fetch(`${apiUrl}/api/auth/seller-context`, {
+            const response = await fetch('http://192.168.3.131:4000/api/auth/seller-context', {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
@@ -95,6 +94,13 @@ export default function DashboardLayout({
         return () => window.removeEventListener('storage', handleStorageChange);
     }, [router]);
 
+useEffect(() => {
+    const fetchMagicSession = async () => {
+        const magicResponse = await fetch(`/api/auth/magic-session`);
+    console.log(magicResponse,"magicResponse")
+    };
+    fetchMagicSession();
+}, []);
 
 
     // Check if mobile on mount and resize
