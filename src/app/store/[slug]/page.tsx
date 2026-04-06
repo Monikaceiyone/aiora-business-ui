@@ -10,10 +10,12 @@ import {
     Sparkles
 } from 'lucide-react';
 
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+function getSupabase() {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) throw new Error('Missing Supabase environment variables');
+    return createClient(url, key);
+}
 
 interface WebsiteConfig {
     subdomain: string;
@@ -70,7 +72,7 @@ function getDirectImageUrl(url: string | null): string | null {
 
 async function getWebsiteConfig(slug: string): Promise<WebsiteConfig | null> {
     try {
-        // Allow viewing all websites (draft, pending, approved) for preview purposes
+        const supabase = getSupabase();
         const { data, error } = await supabase
             .from('seller_websites')
             .select('*')
@@ -92,6 +94,7 @@ async function getWebsiteConfig(slug: string): Promise<WebsiteConfig | null> {
 
 async function getProducts(sellerId: string): Promise<Product[]> {
     try {
+        const supabase = getSupabase();
         const { data, error } = await supabase
             .from('catalog')
             .select('id, title, description, price, currency, image_link, category_id')
