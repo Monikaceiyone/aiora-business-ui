@@ -78,7 +78,7 @@ export default function CommencePage() {
     return (
         <div className="w-full bg-white overflow-x-hidden">
             {/* Hero — full-viewport background video */}
-            <section className="mx-2 relative w-full h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden">
+            <section className="relative w-full h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden">
                 {/* Background video */}
                 <video
                     ref={videoRef}

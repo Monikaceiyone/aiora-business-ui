@@ -6,13 +6,13 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
-const tabs: { name: string; href: string; forceRefresh?: boolean; comingSoon?: boolean }[] = [
-    { name: 'commence', href: 'https://aiora-business-ui-pdej.vercel.app/', forceRefresh: true },
-    { name: 'core suite', href: 'https://aiora-business-ui-pdej.vercel.app/core-suite' },
-    { name: 'configurations', href: 'https://aiora-business-ui-pdej.vercel.app/configurations' },
-    { name: 'costing', href: 'https://aiora-business-ui-pdej.vercel.app/costing' },
-    { name: 'connect', href: 'https://aiora-business-ui-pdej.vercel.app/connect' },
-    { name: 'command center', href: 'https://dashboard.aiora.live' },
+const tabs: { name: string; href: string; comingSoon?: boolean }[] = [
+    { name: 'commence', href: '/' },
+    { name: 'core suite', href: '/core-suite' },
+    { name: 'configurations', href: '/configurations' },
+    { name: 'costing', href: '/costing' },
+    { name: 'connect', href: '/connect' },
+    { name: 'command center', href: '/dashboard' },
 ];
 
 export function Navigation() {
@@ -20,9 +20,11 @@ export function Navigation() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
+    const isHome = pathname === '/';
+
     const isActive = (href: string) => {
         if (href === '/') return pathname === '/';
-        return pathname === href;
+        return pathname.startsWith(href);
     };
 
     const handleClick = (e: React.MouseEvent, tab: typeof tabs[0]) => {
@@ -30,19 +32,11 @@ export function Navigation() {
             e.preventDefault();
             return;
         }
-        if (tab.forceRefresh) {
-            e.preventDefault();
-            window.location.href = tab.href;
-        }
         setIsMobileMenuOpen(false);
     };
 
     useEffect(() => {
-        if (isMobileMenuOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
+        document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
         return () => { document.body.style.overflow = 'unset'; };
     }, [isMobileMenuOpen]);
 
@@ -51,6 +45,14 @@ export function Navigation() {
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
+
+    // On homepage, nav overlays the dark video — use white text until scrolled
+    const logoColor = !scrolled && isHome ? 'text-white' : 'text-black';
+    const linkColor = (active: boolean) =>
+        !scrolled && isHome
+            ? active ? 'text-white font-bold' : 'text-white/70 hover:text-white'
+            : active ? 'text-black font-bold' : 'text-gray-400 hover:text-black';
+    const hamburgerColor = !scrolled && isHome ? 'text-white hover:bg-white/10' : 'text-black hover:bg-gray-100';
 
     return (
         <>
@@ -63,35 +65,31 @@ export function Navigation() {
             >
                 <div className="w-full px-6 md:px-12 h-20 relative flex items-center justify-between">
                     <div className="flex-shrink-0 z-20">
-                        <Link href="/" className="text-2xl font-black tracking-tight text-black">
+                        <Link href="/" className={`text-2xl font-black tracking-tight transition-colors ${logoColor}`}>
                             ai.ora
                         </Link>
                     </div>
 
-                    <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center gap-8 overflow-x-auto scrollbar-hide py-2 z-10 w-auto justify-center">
-                        {tabs.map((tab) => {
-                            const active = isActive(tab.href);
-                            return (
-                                <Link
-                                    key={tab.name}
-                                    href={tab.href}
-                                    onClick={(e) => handleClick(e, tab)}
-                                    className={`
-                                        text-sm font-medium tracking-wide uppercase transition-all duration-300 whitespace-nowrap
-                                        ${active ? 'text-black font-bold' : 'text-gray-400 hover:text-black'}
-                                        ${tab.comingSoon ? 'opacity-50 cursor-not-allowed hover:text-gray-400' : ''}
-                                    `}
-                                >
-                                    {tab.name}
-                                </Link>
-                            );
-                        })}
+                    <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center gap-8 py-2 z-10">
+                        {tabs.map((tab) => (
+                            <Link
+                                key={tab.name}
+                                href={tab.href}
+                                onClick={(e) => handleClick(e, tab)}
+                                className={`text-sm font-medium tracking-wide uppercase transition-all duration-300 whitespace-nowrap
+                                    ${linkColor(isActive(tab.href))}
+                                    ${tab.comingSoon ? 'opacity-50 cursor-not-allowed' : ''}
+                                `}
+                            >
+                                {tab.name}
+                            </Link>
+                        ))}
                     </div>
 
                     <div className="md:hidden z-20">
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="p-2 text-black hover:bg-gray-100 rounded-full transition-colors"
+                            className={`p-2 rounded-full transition-colors ${hamburgerColor}`}
                         >
                             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
@@ -110,30 +108,26 @@ export function Navigation() {
                         transition={{ duration: 0.2 }}
                         className="fixed inset-0 z-40 bg-white pt-24 px-6 pb-8 md:hidden flex flex-col items-center justify-start space-y-6 overflow-y-auto"
                     >
-                        {tabs.map((tab, idx) => {
-                            const active = isActive(tab.href);
-                            return (
-                                <motion.div
-                                    key={tab.name}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: idx * 0.05 }}
-                                    className="w-full text-center"
+                        {tabs.map((tab, idx) => (
+                            <motion.div
+                                key={tab.name}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: idx * 0.05 }}
+                                className="w-full text-center"
+                            >
+                                <Link
+                                    href={tab.href}
+                                    onClick={(e) => handleClick(e, tab)}
+                                    className={`block w-full py-4 text-2xl font-black uppercase tracking-tight transition-colors
+                                        ${isActive(tab.href) ? 'text-black' : 'text-gray-400 hover:text-black'}
+                                    `}
                                 >
-                                    <Link
-                                        href={tab.href}
-                                        onClick={(e) => handleClick(e, tab)}
-                                        className={`
-                                            block w-full py-4 text-2xl font-black uppercase tracking-tight transition-colors
-                                            ${active ? 'text-black' : 'text-gray-400 hover:text-black'}
-                                        `}
-                                    >
-                                        {tab.name}
-                                    </Link>
-                                    <div className="w-12 h-[1px] bg-gray-100 mx-auto mt-2" />
-                                </motion.div>
-                            );
-                        })}
+                                    {tab.name}
+                                </Link>
+                                <div className="w-12 h-[1px] bg-gray-100 mx-auto mt-2" />
+                            </motion.div>
+                        ))}
                     </motion.div>
                 )}
             </AnimatePresence>
