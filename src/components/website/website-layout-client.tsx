@@ -7,6 +7,8 @@ import { Footer } from '@/components/website/footer';
 export function WebsiteLayoutClient({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isLockedPage = pathname === '/core-suite';
+    // Home page hero should extend behind the nav bar
+    const isHomePage = pathname === '/';
 
     if (isLockedPage) {
         return (
@@ -24,8 +26,10 @@ export function WebsiteLayoutClient({ children }: { children: React.ReactNode })
 
     return (
         <div className="w-full bg-white text-black font-sans relative">
+            {/* Navigation is fixed z-50, always above everything */}
             <Navigation />
-            <main className="w-full relative z-0 pt-20">
+            {/* On home page, no top padding so the hero video fills from top-0 behind the nav */}
+            <main className={`w-full relative z-0 ${isHomePage ? '' : 'pt-20'}`}>
                 {children}
             </main>
             <Footer />

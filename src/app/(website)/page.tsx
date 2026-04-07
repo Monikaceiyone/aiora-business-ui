@@ -77,8 +77,8 @@ export default function CommencePage() {
 
     return (
         <div className="w-full bg-white overflow-x-hidden">
-            {/* Hero — full-viewport background video */}
-            <section className="relative w-full h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden">
+            {/* Hero — full-viewport background video, extends behind fixed nav */}
+            <section className="relative w-full h-[100dvh] min-h-[600px] flex flex-col items-center justify-center overflow-hidden">
                 {/* Background video */}
                 <video
                     ref={videoRef}
@@ -99,10 +99,10 @@ export default function CommencePage() {
                 {/* Dark overlay */}
                 <div className="absolute inset-0 bg-black/60" />
 
-                {/* Mute toggle */}
+                {/* Mute toggle — offset below nav */}
                 <button
                     onClick={toggleMute}
-                    className="absolute top-5 right-5 z-20 text-white/80 hover:text-white transition-colors p-2.5 bg-black/40 backdrop-blur-md rounded-full"
+                    className="absolute top-24 right-5 z-20 text-white/80 hover:text-white transition-colors p-2.5 bg-black/40 backdrop-blur-md rounded-full"
                     aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                 >
                     {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
