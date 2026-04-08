@@ -41,7 +41,7 @@ const features = [
         subtitle: 'Photo to Order',
         desc: 'Customer sends a photo of their grocery list — AI reads it and creates an order instantly.',
         color: '#2563EB',
-        image: '/images/agents/inventory-agent.png',
+        image: '/images/agents/ecommerce-agent.png',
         industry: 'Retail & Grocery',
         href: '/core-suite',
     },
