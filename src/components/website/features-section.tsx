@@ -8,6 +8,7 @@ export interface FeatureCard {
     icon: LucideIcon;
     title: string;
     description: string;
+    image?: string;       // ← optional image URL for inside the card
     bgColor?: string;
     iconColor?: string;
 }
@@ -39,10 +40,9 @@ export default function FeaturesSection({
     useEffect(() => {
         intervalRef.current = setInterval(next, 3500);
         return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [total]);
 
-    const handleDotClick = (i: number) => { setActiveIndex(i); resetTimer(); };
     const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
     const handleTouchEnd = (e: React.TouchEvent) => {
         if (touchStartX.current === null) return;
@@ -65,9 +65,9 @@ export default function FeaturesSection({
                 <h2 className="text-2xl md:text-4xl font-black text-gray-900">{heading}</h2>
             </motion.div>
 
-            {/* Desktop / Tablet: 4 cards visible, overflow scrolls horizontally */}
-            <div className="hidden sm:block max-w-7xl mx-auto">
-                <div className="flex gap-5 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory scrollbar-hide">
+            {/* ── Desktop / Tablet ── */}
+            <div className="hidden sm:block ">
+                <div className="flex gap-12 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory scrollbar-hide">
                     {cards.map((card, i) => (
                         <motion.div
                             key={card.title}
@@ -76,32 +76,40 @@ export default function FeaturesSection({
                             viewport={{ once: true }}
                             transition={{ duration: 0.4, delay: i * 0.06 }}
                             className="snap-start flex-shrink-0 flex flex-col rounded-3xl overflow-hidden
-                                       shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-default"
+                                       border border-white/40 bg-white/10 backdrop-blur-sm
+                                       hover:bg-white/20 hover:-translate-y-1
+                                       transition-colors duration-300 cursor-default shadow-sm hover:shadow-xl"
                             style={{
                                 width: 'calc(25% - 15px)',
                                 minWidth: '220px',
-                                background: card.bgColor ?? '#ffffff',
+                                minHeight: '520px',
                             }}
                         >
-                            {/* Icon area — top colored block */}
-                            <div
-                                className="flex items-center justify-center pt-8 pb-6 px-6"
-                                style={{ background: card.bgColor ?? '#f3f4f6' }}
-                            >
-                                <div
-                                    className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-sm"
-                                    style={{ backgroundColor: card.iconColor ? `${card.iconColor}22` : '#e5e7eb' }}
-                                >
-                                    <card.icon
-                                        className="w-9 h-9"
-                                        style={{ color: card.iconColor ?? '#374151' }}
-                                    />
-                                </div>
+                            {/* Image area — fills top ~65% of card */}
+                            <div className="relative flex-1 overflow-hidden" style={{ minHeight: '340px' }}>
+                                <img
+                                    src={card.image}
+                                    alt={card.title}
+                                    className="w-full h-full object-cover"
+                                />
+                                {/* subtle dark gradient so text below doesn't clash */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                             </div>
 
-                            {/* Text area — white bottom */}
-                            <div className="bg-white flex flex-col flex-1 px-5 py-5 text-center">
-                                <h3 className="text-base font-bold text-gray-900 mb-2">{card.title}</h3>
+                            {/* Text area */}
+                            <div className="bg-white px-5 py-6 text-left">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div
+                                        className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: card.iconColor ? `${card.iconColor}22` : '#f3f4f6' }}
+                                    >
+                                        <card.icon
+                                            className="w-5 h-5"
+                                            style={{ color: card.iconColor ?? '#374151' }}
+                                        />
+                                    </div>
+                                    <h3 className="text-base font-bold text-gray-900">{card.title}</h3>
+                                </div>
                                 <p className="text-sm text-gray-500 leading-relaxed">{card.description}</p>
                             </div>
                         </motion.div>
@@ -109,7 +117,7 @@ export default function FeaturesSection({
                 </div>
             </div>
 
-            {/* Mobile: single-card auto-slide carousel */}
+            {/* ── Mobile carousel — with navigation arrows ── */}
             <div
                 className="sm:hidden relative overflow-hidden"
                 onTouchStart={handleTouchStart}
@@ -120,50 +128,60 @@ export default function FeaturesSection({
                     style={{ transform: `translateX(-${activeIndex * 100}%)` }}
                 >
                     {cards.map((card) => (
-                        <div key={card.title} className="w-full flex-shrink-0 px-4">
+                        <div key={card.title} className="w-full flex-shrink-0 px-2">
                             <div
-                                className="rounded-3xl overflow-hidden shadow-sm mx-auto max-w-xs"
-                                style={{ background: card.bgColor ?? '#ffffff' }}
+                                className="rounded-3xl overflow-hidden mx-auto max-w-sm flex flex-col
+                                           border border-white/40 bg-white/10 backdrop-blur-sm shadow-sm relative"
+                                style={{ minHeight: '520px' }}
                             >
-                                {/* Icon area */}
-                                <div
-                                    className="flex items-center justify-center pt-10 pb-8 px-6"
-                                    style={{ background: card.bgColor ?? '#f3f4f6' }}
-                                >
-                                    <div
-                                        className="w-24 h-24 rounded-2xl flex items-center justify-center shadow-sm"
-                                        style={{ backgroundColor: card.iconColor ? `${card.iconColor}22` : '#e5e7eb' }}
-                                    >
-                                        <card.icon
-                                            className="w-11 h-11"
-                                            style={{ color: card.iconColor ?? '#374151' }}
-                                        />
-                                    </div>
+                                {/* Image — tall top area with full coverage */}
+                                <div className="relative overflow-hidden flex-1">
+                                    <img
+                                        src={card.image}
+                                        alt={card.title}
+                                        className="w-full h-full object-cover absolute inset-0"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                                 </div>
 
-                                {/* Text area */}
-                                <div className="bg-white px-6 py-6 text-center">
-                                    <h3 className="text-base font-bold text-gray-900 mb-2">{card.title}</h3>
+                                {/* Text */}
+                                <div className="bg-white px-6 py-6 text-left">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div
+                                            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                                            style={{ backgroundColor: card.iconColor ? `${card.iconColor}22` : '#f3f4f6' }}
+                                        >
+                                            <card.icon
+                                                className="w-5 h-5"
+                                                style={{ color: card.iconColor ?? '#374151' }}
+                                            />
+                                        </div>
+                                        <h3 className="text-base font-bold text-gray-900">{card.title}</h3>
+                                    </div>
                                     <p className="text-sm text-gray-500 leading-relaxed">{card.description}</p>
                                 </div>
+
+                                {/* Navigation Arrows */}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); prev(); resetTimer(); }}
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/50 backdrop-blur-sm shadow-lg flex items-center justify-center hover:bg-white transition-colors z-10"
+                                    aria-label="Previous"
+                                >
+                                    <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); next(); resetTimer(); }}
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/50 backdrop-blur-sm shadow-lg flex items-center justify-center hover:bg-white transition-colors z-10"
+                                    aria-label="Next"
+                                >
+                                    <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                    ))}
-                </div>
-
-                {/* Navigation dots */}
-                <div className="flex justify-center gap-2 mt-6">
-                    {cards.map((_, i) => (
-                        <button
-                            key={i}
-                            onClick={() => handleDotClick(i)}
-                            aria-label={`Go to slide ${i + 1}`}
-                            className={`rounded-full transition-all duration-300 ${
-                                i === activeIndex
-                                    ? 'w-6 h-2 bg-gray-800'
-                                    : 'w-2 h-2 bg-gray-300'
-                            }`}
-                        />
                     ))}
                 </div>
             </div>

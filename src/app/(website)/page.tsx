@@ -59,71 +59,139 @@ const features = [
 
 const featureCards: FeatureCard[] = [
     {
-        icon: Zap,
-        title: 'Instant Automation',
-        description: 'Automate repetitive tasks across calls, chats, and orders without writing a single line of code.',
-        bgColor: '#fefce8',
+        icon: Phone,
+        title: 'VOIT',
+        description: 'Your AI receptionist handles calls, books appointments, and takes orders — in Hindi & English.',
+        image: '/voice Ai.png',
         iconColor: '#d97706',
     },
     {
         icon: MessageCircle,
-        title: 'WhatsApp Commerce',
-        description: 'Let customers browse, order, and pay directly inside WhatsApp — no app download needed.',
-        bgColor: '#f0fdf4',
+        title: 'WhatsApp AI',
+        description: 'Automated customer support on WhatsApp. Answers queries, books slots, manages orders.',
+        image: '/images/agents/ecommerce-agent.png',
         iconColor: '#059669',
+        
     },
     {
-        icon: Phone,
-        title: 'Voice AI Agent',
-        description: 'An AI receptionist that answers calls, books appointments, and handles queries in Hindi & English.',
-        bgColor: '#f5f3ff',
+        icon: Camera,
+        title: 'OCR Engine',
+        description: 'Customer sends a photo of their grocery list — AI reads it and creates an order instantly.',
+        image: '/images/agents/inventory-agent.png',
         iconColor: '#7c3aed',
     },
     {
-        icon: BarChart2,
-        title: 'Real-time Analytics',
-        description: 'Track conversations, orders, and agent performance from a single unified dashboard.',
-        bgColor: '#eff6ff',
+        icon: LayoutGrid,
+        title: 'Smart Catalog',
+        description: 'Full product catalog with search, PDF generation, and WhatsApp browsing built-in.',
+        image: '/images/agents/marketing-agent.png',
         iconColor: '#2563eb',
     },
     {
         icon: Shield,
         title: 'Enterprise Security',
         description: 'End-to-end encryption, role-based access, and compliance-ready infrastructure out of the box.',
-        bgColor: '#fff1f2',
+        image: '/voice Ai.png',
         iconColor: '#e11d48',
     },
-    {
-        icon: Globe,
-        title: 'Multi-language Support',
-        description: 'Serve customers in their preferred language — Hindi, English, and regional languages supported.',
-        bgColor: '#ecfeff',
-        iconColor: '#0891b2',
-    },
-    {
-        icon: Clock,
-        title: '24/7 Availability',
-        description: 'Your AI agents never sleep. Handle customer queries and orders around the clock, every day.',
-        bgColor: '#fdf4ff',
-        iconColor: '#a21caf',
-    },
-    {
-        icon: Headphones,
-        title: 'Dedicated Support',
-        description: 'Onboarding specialists and a support team that helps you go live and stay live without friction.',
-        bgColor: '#fff7ed',
-        iconColor: '#ea580c',
-    },
+   
 ];
 
-const useCases = [
-    { name: 'Grocery Stores', icon: ShoppingCart },
-    { name: 'Restaurants', icon: UtensilsCrossed },
-    { name: 'Salons & Spas', icon: Scissors },
-    { name: 'Clinics', icon: Stethoscope },
-    { name: 'Retail Shops', icon: Store },
-    { name: 'Service Providers', icon: Wrench },
+const useCasesData = [
+    { name: 'Grocery Stores', icon: ShoppingCart, image: '/images/agents/inventory-agent.png', category: 'Retail' },
+    { name: 'Restaurants', icon: UtensilsCrossed, image: '/images/agents/operations-agent.jpg', category: 'Food & Beverage' },
+    { name: 'Salons & Spas', icon: Scissors, image: '/images/agents/booking-agent.png', category: 'Beauty' },
+    { name: 'Clinics', icon: Stethoscope, image: '/images/agents/finance-agent.png', category: 'Healthcare' },
+    { name: 'Retail Shops', icon: Store, image: '/images/agents/ecommerce-agent.png', category: 'Commerce' },
+    { name: 'Service Providers', icon: Wrench, image: '/images/agents/repair-agent.png', category: 'Services' },
 ];
+
+function UseCasesCarousel({ useCases }: { useCases: typeof useCasesData }) {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const total = useCases.length;
+
+    const scrollTo = (dir: 'prev' | 'next') => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const cardWidth = el.offsetWidth - 32;
+        el.scrollBy({ left: dir === 'next' ? cardWidth + 16 : -(cardWidth + 16), behavior: 'smooth' });
+    };
+
+    const resetTimer = () => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = setInterval(() => {
+            const el = scrollRef.current;
+            if (!el) return;
+            const cardWidth = el.offsetWidth - 32;
+            const maxScroll = el.scrollWidth - el.offsetWidth;
+            if (el.scrollLeft >= maxScroll - 4) {
+                el.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                el.scrollBy({ left: cardWidth + 16, behavior: 'smooth' });
+            }
+        }, 3500);
+    };
+
+    useEffect(() => {
+        resetTimer();
+        return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [total]);
+
+    return (
+        <div className="sm:hidden relative">
+            <div
+                ref={scrollRef}
+                className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide gap-4 px-4"
+                onTouchStart={() => { if (intervalRef.current) clearInterval(intervalRef.current); }}
+                onTouchEnd={resetTimer}
+            >
+                {useCases.map((uc) => (
+                    <div key={uc.name} className="snap-center flex-shrink-0 w-[calc(100%-32px)]">
+                        <div className="relative rounded-3xl overflow-hidden h-80 cursor-pointer">
+                            <img
+                                src={uc.image}
+                                alt={uc.name}
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
+                            <div className="absolute top-5 left-5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
+                                <span className="text-xs font-medium text-white">• {uc.category}</span>
+                            </div>
+                            <div className="absolute bottom-5 left-5 right-20 text-white">
+                                <h3 className="text-xl font-bold mb-1">{uc.name}</h3>
+                                <p className="text-sm text-white/80">Started by you. Accelerated with AI.</p>
+                            </div>
+                            {/* <button className="absolute bottom-5 right-5 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center">
+                                <Plus className="w-5 h-5 text-white" />
+                            </button> */}
+                            {/* Arrows */}
+                            <button
+                                onClick={() => { scrollTo('prev'); resetTimer(); }}
+                                className="absolute left-0 bottom-[131px] w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center z-10"
+                                aria-label="Previous"
+                            >
+                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={() => { scrollTo('next'); resetTimer(); }}
+                                className="absolute right-0 bottom-[131px] w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center z-10"
+                                aria-label="Next"
+                            >
+                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
 
 export default function CommencePage() {
     const [isMuted, setIsMuted] = useState(true);
@@ -307,105 +375,30 @@ export default function CommencePage() {
             </section>
 
             {/* Divider */}
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
             {/* Features */}
-            <section className="px-6 md:px-12 py-10 max-w-6xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-8"
-                >
-                    <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-3">what we build</p>
-                    <h2 className="text-2xl md:text-4xl font-black text-gray-900">
-                        four products. <span className="text-gray-300">one platform.</span>
-                    </h2>
-                </motion.div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {features.map((f, i) => (
-                        <motion.a
-                            key={f.title}
-                            href={f.href}
-                            initial={{ opacity: 0, y: 15 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: i * 0.08 }}
-                            className="group relative rounded-2xl overflow-hidden aspect-[4/3] block"
-                        >
-                            {/* Background image */}
-                            <Image
-                                src={f.image}
-                                alt={f.title}
-                                fill
-                                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                sizes="(max-width: 640px) 100vw, 50vw"
-                            />
-
-                            {/* Gradient overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
-
-                            {/* Industry tag — top left */}
-                            <div className="absolute top-4 left-4 flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-white inline-block" />
-                                <span className="text-white text-xs font-medium tracking-wide">{f.industry}</span>
-                            </div>
-
-                            {/* Industries center overlay — first card only, visible on hover */}
-                            {'industries' in f && f.industries && (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 backdrop-blur-sm px-6">
-                                    <p className="text-white/50 text-xs uppercase tracking-[0.25em] mb-3">industries</p>
-                                    <div className="flex flex-col items-center gap-2">
-                                        {(f.industries as string[]).map((ind) => (
-                                            <span
-                                                key={ind}
-                                                className="text-white text-sm font-semibold text-center"
-                                            >
-                                                {ind}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Product info — bottom left */}
-                            <div className="absolute bottom-4 left-4 right-14">
-                                <h3 className="text-white text-xl font-black leading-tight">{f.title}</h3>
-                                <p className="text-white/70 text-sm mt-0.5 leading-snug">{f.desc}</p>
-                            </div>
-
-                            {/* Plus button — bottom right */}
-                            <div className="absolute bottom-4 right-4 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                                <Plus className="w-4 h-4 text-white" />
-                            </div>
-                        </motion.a>
-                    ))}
-                </div>
-            </section>
-
+   
             {/* Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
             {/* Feature Cards Section */}
-            {/* <FeaturesSection
-                subheading="why aiora"
-                heading="Built for businesses that move fast."
+            <FeaturesSection
+                subheading="what we build"
+                heading="four products. one platform."
                 cards={featureCards}
-            /> */}
+            />
 
             {/* Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
             {/* Use Cases */}
-            <section className="px-6 md:px-12 py-10 max-w-6xl mx-auto">
+            <section className="py-10  ">
                 <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="text-center mb-8"
+                    className="text-center mb-8 px-6 md:px-12"
                 >
                     <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-3">built for</p>
                     <h2 className="text-2xl md:text-4xl font-black text-gray-900">
@@ -413,21 +406,51 @@ export default function CommencePage() {
                     </h2>
                 </motion.div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-3xl mx-auto">
-                    {useCases.map((uc, i) => (
-                        <motion.div
-                            key={uc.name}
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.3, delay: i * 0.04 }}
-                            className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center hover:border-gray-300 hover:shadow-md transition-all duration-300"
-                        >
-                            <uc.icon className="w-6 h-6 text-gray-900 mx-auto mb-2" />
-                            <span className="text-sm font-semibold text-gray-700">{uc.name}</span>
-                        </motion.div>
-                    ))}
+                {/* Desktop/Tablet - Horizontal scrollable */}
+                <div className="hidden sm:block px-6 md:px-12">
+                    <div className="flex gap-4 overflow-x-auto scroll-smooth pb-4 snap-x snap-mandatory scrollbar-hide">
+                        {useCasesData.map((uc, i) => (
+                            <motion.div
+                                key={uc.name}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.3, delay: i * 0.04 }}
+                                className="snap-start flex-shrink-0 relative rounded-3xl overflow-hidden h-80 group cursor-pointer"
+                                style={{ width: 'calc(50% - 8px)', minWidth: '320px' }}
+                            >
+                                {/* Background Image */}
+                                <img
+                                    src={uc.image}
+                                    alt={uc.name}
+                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                                
+                                {/* Dark overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
+                                
+                                {/* Category tag - top left */}
+                                <div className="absolute top-5 left-5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
+                                    <span className="text-xs font-medium text-white">• {uc.category}</span>
+                                </div>
+                                
+                                {/* Content - bottom left */}
+                                <div className="absolute bottom-5 left-5 right-20 text-white">
+                                    <h3 className="text-xl font-bold mb-1">{uc.name}</h3>
+                                    <p className="text-sm text-white/80">Started by you. Accelerated with AI.</p>
+                                </div>
+                                
+                                {/* Read more button - bottom right */}
+                                {/* <button className="absolute bottom-5 right-5 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-200 group-hover:scale-110">
+                                    <Plus className="w-5 h-5 text-white" />
+                                </button> */}
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
+
+                {/* Mobile - One card at a time with swipe */}
+                <UseCasesCarousel useCases={useCasesData} />
             </section>
 
             {/* Divider */}
