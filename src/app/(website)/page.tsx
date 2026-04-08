@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Volume2, VolumeX, Send, Phone, MessageCircle, Camera, LayoutGrid, ArrowRight, ChevronRight, ShoppingCart, UtensilsCrossed, Scissors, Stethoscope, Store, Wrench } from 'lucide-react';
+import Image from 'next/image';
+import { Volume2, VolumeX, Send, Phone, MessageCircle, Camera, LayoutGrid, ArrowRight, ChevronRight, ShoppingCart, UtensilsCrossed, Scissors, Stethoscope, Store, Wrench, Plus, Zap, BarChart2, Shield, Globe, Clock, Headphones } from 'lucide-react';
+import FeaturesSection, { FeatureCard } from '@/components/website/features-section';
 
 const stats = [
     { value: '50+', label: 'businesses powered' },
@@ -18,6 +20,10 @@ const features = [
         subtitle: 'Voice AI Agent',
         desc: 'Your AI receptionist handles calls, books appointments, and takes orders — in Hindi & English.',
         color: '#7C3AED',
+        image: '/voice Ai.png',
+        industry: 'Voice & Telephony',
+        href: '/core-suite',
+        industries: ['Healthcare', 'Restaurants & Food Services', 'Hospitality (Hotels & Resorts)', 'E-commerce & Retail'],
     },
     {
         icon: MessageCircle,
@@ -25,6 +31,9 @@ const features = [
         subtitle: 'Smart Chat Agent',
         desc: 'Automated customer support on WhatsApp. Answers queries, books slots, manages orders.',
         color: '#059669',
+        image: '/images/agents/ecommerce-agent.png',
+        industry: 'Messaging & Commerce',
+        href: '/core-suite',
     },
     {
         icon: Camera,
@@ -32,6 +41,9 @@ const features = [
         subtitle: 'Photo to Order',
         desc: 'Customer sends a photo of their grocery list — AI reads it and creates an order instantly.',
         color: '#2563EB',
+        image: '/images/agents/inventory-agent.png',
+        industry: 'Retail & Grocery',
+        href: '/core-suite',
     },
     {
         icon: LayoutGrid,
@@ -39,6 +51,68 @@ const features = [
         subtitle: 'Digital Inventory',
         desc: 'Full product catalog with search, PDF generation, and WhatsApp browsing built-in.',
         color: '#D97706',
+        image: '/images/agents/marketing-agent.png',
+        industry: 'Catalog & Discovery',
+        href: '/core-suite',
+    },
+];
+
+const featureCards: FeatureCard[] = [
+    {
+        icon: Zap,
+        title: 'Instant Automation',
+        description: 'Automate repetitive tasks across calls, chats, and orders without writing a single line of code.',
+        bgColor: '#fefce8',
+        iconColor: '#d97706',
+    },
+    {
+        icon: MessageCircle,
+        title: 'WhatsApp Commerce',
+        description: 'Let customers browse, order, and pay directly inside WhatsApp — no app download needed.',
+        bgColor: '#f0fdf4',
+        iconColor: '#059669',
+    },
+    {
+        icon: Phone,
+        title: 'Voice AI Agent',
+        description: 'An AI receptionist that answers calls, books appointments, and handles queries in Hindi & English.',
+        bgColor: '#f5f3ff',
+        iconColor: '#7c3aed',
+    },
+    {
+        icon: BarChart2,
+        title: 'Real-time Analytics',
+        description: 'Track conversations, orders, and agent performance from a single unified dashboard.',
+        bgColor: '#eff6ff',
+        iconColor: '#2563eb',
+    },
+    {
+        icon: Shield,
+        title: 'Enterprise Security',
+        description: 'End-to-end encryption, role-based access, and compliance-ready infrastructure out of the box.',
+        bgColor: '#fff1f2',
+        iconColor: '#e11d48',
+    },
+    {
+        icon: Globe,
+        title: 'Multi-language Support',
+        description: 'Serve customers in their preferred language — Hindi, English, and regional languages supported.',
+        bgColor: '#ecfeff',
+        iconColor: '#0891b2',
+    },
+    {
+        icon: Clock,
+        title: '24/7 Availability',
+        description: 'Your AI agents never sleep. Handle customer queries and orders around the clock, every day.',
+        bgColor: '#fdf4ff',
+        iconColor: '#a21caf',
+    },
+    {
+        icon: Headphones,
+        title: 'Dedicated Support',
+        description: 'Onboarding specialists and a support team that helps you go live and stay live without friction.',
+        bgColor: '#fff7ed',
+        iconColor: '#ea580c',
     },
 ];
 
@@ -68,7 +142,7 @@ export default function CommencePage() {
         video.muted = true;
         setIsMuted(true);
         const playVideo = async () => {
-            try { await video.play(); } catch {}
+            try { await video.play(); } catch { }
         };
         playVideo();
         const timer = setTimeout(() => { if (video.paused) playVideo(); }, 1000);
@@ -92,7 +166,7 @@ export default function CommencePage() {
                     className="absolute inset-0 w-full h-full object-cover"
                     style={{ backgroundImage: 'url(/hero-banner.png)', backgroundSize: 'cover' }}
                     onLoadedData={() => {
-                        if (videoRef.current) videoRef.current.play().catch(() => {});
+                        if (videoRef.current) videoRef.current.play().catch(() => { });
                     }}
                 />
 
@@ -109,15 +183,8 @@ export default function CommencePage() {
                 </button>
 
                 {/* Overlay content */}
-                <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-12 max-w-4xl mx-auto">
-                    {/* <motion.p
-                        initial={{ opacity: 0, y: 16 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="text-sm uppercase tracking-[0.3em] text-white/60 font-medium mb-4"
-                    >
-                        the ai platform for real businesses
-                    </motion.p> */}
+                {/* <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-12 max-w-4xl mx-auto">
+                
 
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
@@ -142,27 +209,27 @@ export default function CommencePage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.34 }}
-                        className="flex flex-col sm:flex-row items-center justify-center gap-3"
+                        className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full"
                     >
                         <a
                             href="/connect"
-                            className="group flex items-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-full font-bold text-base hover:bg-gray-100 transition-all duration-300 shadow-lg"
+                            className="group flex items-center justify-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-full font-bold text-base hover:bg-gray-100 transition-all duration-300 shadow-lg w-full sm:w-auto"
                         >
                             get started
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </a>
                         <a
                             href="/core-suite"
-                            className="flex items-center gap-2 text-white/70 hover:text-white px-6 py-4 text-base font-medium transition-colors"
+                            className="flex items-center justify-center gap-2 text-white border border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 px-8 py-4 rounded-full text-base font-medium transition-colors w-full sm:w-auto"
                         >
                             explore core suite
                             <ChevronRight className="w-4 h-4" />
                         </a>
                     </motion.div>
-                </div>
+                </div> */}
 
                 {/* Stats bar pinned to bottom of hero */}
-                <motion.div
+                {/* <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.45 }}
@@ -174,7 +241,69 @@ export default function CommencePage() {
                             <div className="text-xs text-white/50 mt-1 uppercase tracking-wider">{s.label}</div>
                         </div>
                     ))}
-                </motion.div>
+                </motion.div> */}
+
+
+                {/* Overlay content */}
+<div className="relative z-10 flex flex-col items-center text-center px-6 md:px-12 max-w-4xl mx-auto w-full">
+    <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, delay: 0.1 }}
+        className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-tight mb-4"
+    >
+        The AI Platform for<br className="hidden sm:block" /> Real Businesses
+    </motion.h1>
+
+    <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.22 }}
+        className="text-white/70 text-sm md:text-lg max-w-2xl leading-relaxed mb-6"
+    >
+        AI-powered voice agents, WhatsApp automation, and smart commerce —
+        built for businesses that want to scale without hiring an army.
+    </motion.p>
+
+    <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.34 }}
+        className="flex flex-col items-center justify-center gap-3 w-full max-w-xs sm:max-w-none sm:flex-row"
+    >
+        <a
+        
+            href="/connect"
+            className="group flex items-center justify-center gap-3 bg-white text-gray-900 px-8 py-3.5 rounded-full font-bold text-base hover:bg-gray-100 transition-all duration-300 shadow-lg w-full sm:w-auto"
+        >
+            get started
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </a>
+        
+        <a
+            href="/core-suite"
+            className="flex items-center justify-center gap-2 text-white border border-white/40 bg-white/10 backdrop-blur-sm hover:bg-white/20 px-8 py-3.5 rounded-full text-base font-medium transition-colors w-full sm:w-auto"
+        >
+            explore core suite
+            <ChevronRight className="w-4 h-4" />
+        </a>
+    </motion.div>
+</div>
+
+{/* Stats bar pinned to bottom of hero */}
+<motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.6, delay: 0.45 }}
+    className="absolute bottom-0 left-0 right-0 z-10 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10 border-t border-white/10 bg-black/40 backdrop-blur-md"
+>
+    {stats.map((s) => (
+        <div key={s.label} className="text-center py-3 px-2">
+            <div className="text-xl md:text-3xl font-black text-white">{s.value}</div>
+            <div className="text-xs text-white/50 mt-1 uppercase tracking-wider">{s.label}</div>
+        </div>
+    ))}
+</motion.div>
             </section>
 
             {/* Divider */}
@@ -195,31 +324,76 @@ export default function CommencePage() {
                     </h2>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {features.map((f, i) => (
-                        <motion.div
+                        <motion.a
                             key={f.title}
+                            href={f.href}
                             initial={{ opacity: 0, y: 15 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.4, delay: i * 0.08 }}
-                            className="group bg-white border border-gray-200 rounded-xl p-6 hover:border-gray-300 hover:shadow-lg transition-all duration-300"
+                            className="group relative rounded-2xl overflow-hidden aspect-[4/3] block"
                         >
-                            <div
-                                className="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
-                                style={{ backgroundColor: `${f.color}12` }}
-                            >
-                                <f.icon className="w-5 h-5" style={{ color: f.color }} />
+                            {/* Background image */}
+                            <Image
+                                src={f.image}
+                                alt={f.title}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                sizes="(max-width: 640px) 100vw, 50vw"
+                            />
+
+                            {/* Gradient overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
+
+                            {/* Industry tag — top left */}
+                            <div className="absolute top-4 left-4 flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-white inline-block" />
+                                <span className="text-white text-xs font-medium tracking-wide">{f.industry}</span>
                             </div>
-                            <div className="flex items-baseline gap-2 mb-1">
-                                <h3 className="text-lg font-black text-gray-900">{f.title}</h3>
-                                <span className="text-xs uppercase tracking-wider text-gray-400">{f.subtitle}</span>
+
+                            {/* Industries center overlay — first card only, visible on hover */}
+                            {'industries' in f && f.industries && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 backdrop-blur-sm px-6">
+                                    <p className="text-white/50 text-xs uppercase tracking-[0.25em] mb-3">industries</p>
+                                    <div className="flex flex-col items-center gap-2">
+                                        {(f.industries as string[]).map((ind) => (
+                                            <span
+                                                key={ind}
+                                                className="text-white text-sm font-semibold text-center"
+                                            >
+                                                {ind}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Product info — bottom left */}
+                            <div className="absolute bottom-4 left-4 right-14">
+                                <h3 className="text-white text-xl font-black leading-tight">{f.title}</h3>
+                                <p className="text-white/70 text-sm mt-0.5 leading-snug">{f.desc}</p>
                             </div>
-                            <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
-                        </motion.div>
+
+                            {/* Plus button — bottom right */}
+                            <div className="absolute bottom-4 right-4 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                                <Plus className="w-4 h-4 text-white" />
+                            </div>
+                        </motion.a>
                     ))}
                 </div>
             </section>
+
+            {/* Divider */}
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+
+            {/* Feature Cards Section */}
+            {/* <FeaturesSection
+                subheading="why aiora"
+                heading="Built for businesses that move fast."
+                cards={featureCards}
+            /> */}
 
             {/* Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
