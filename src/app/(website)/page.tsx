@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Volume2, VolumeX, Send, Phone, MessageCircle, Camera, LayoutGrid, ArrowRight, ChevronRight, ShoppingCart, UtensilsCrossed, Scissors, Stethoscope, Store, Wrench, Plus, Zap, BarChart2, Shield, Globe, Clock, Headphones } from 'lucide-react';
 import FeaturesSection, { FeatureCard } from '@/components/website/features-section';
 import ProductShowcaseCarousel, { ShowcaseProduct } from '@/components/website/product-showcase-carousel';
+import NetflixShowcase, { NetflixCard } from '@/components/website/netflix-showcase';
 
 const stats = [
     { value: '50+', label: 'businesses powered' },
@@ -145,6 +146,15 @@ const useCasesData = [
     { name: 'Clinics', icon: Stethoscope, image: '/images/agents/finance-agent.png', category: 'Healthcare' },
     { name: 'Retail Shops', icon: Store, image: '/images/agents/ecommerce-agent.png', category: 'Commerce' },
     { name: 'Service Providers', icon: Wrench, image: '/images/agents/repair-agent.png', category: 'Services' },
+];
+
+const netflixCards: NetflixCard[] = [
+    { name: 'Grocery Stores',     category: 'Retail',           tagline: 'Automate orders, manage inventory, and serve customers 24/7 with AI.',          image: '/images/homepage/smart.png',  color: '#22c55e' },
+    { name: 'Restaurants',        category: 'Food & Beverage',  tagline: 'Take reservations, handle menu queries, and process orders hands-free.',         image: '/images/homepage/cctv.png', color: '#f97316' },
+    { name: 'Salons & Spas',      category: 'Beauty',           tagline: 'Book appointments, send reminders, and delight clients with smart AI.',           image: '/images/homepage/RetailShops.png',    color: '#ec4899' },
+    { name: 'Clinics',            category: 'Healthcare',       tagline: 'Manage patient calls, schedule visits, and answer FAQs automatically.',           image: '/images/homepage/businessi.png',    color: '#06b6d4' },
+    { name: 'Retail Shops',       category: 'Commerce',         tagline: 'Showcase your catalog, process WhatsApp orders, and grow sales effortlessly.',    image: '/images/agents/ecommerce-agent.png',  color: '#a855f7' },
+    { name: 'Service Providers',  category: 'Services',         tagline: 'Dispatch jobs, follow up with clients, and never miss a lead again.',             image: '/images/agents/repair-agent.png',     color: '#eab308' },
 ];
 
 function UseCasesCarousel({ useCases }: { useCases: typeof useCasesData }) {
@@ -415,22 +425,22 @@ export default function CommencePage() {
                 </motion.div>
             </section>
             {/* Divider */}
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+            {/* <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" /> */}
 
             {/* Product Showcase Carousel */}
-            <section className="py-10  ">
-                <motion.div
+            <section className="">
+                {/* <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="text-center mb-8 px-6 md:px-12"
+                    className="text-center  px-6 md:px-12  bg-black/40 backdrop-blur-md"
                 >
                     <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-3">built for</p>
                     <h2 className="text-2xl md:text-4xl font-black text-gray-900">
                         businesses like <span className="text-gray-300">yours.</span>
                     </h2>
-                </motion.div>
+                </motion.div> */}
                 <ProductShowcaseCarousel products={showcaseProducts} autoPlayInterval={4500} />
             </section>
 
@@ -447,66 +457,9 @@ export default function CommencePage() {
             {/* Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
-            {/* Use Cases */}
-            <section className="py-10  ">
-                <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-8 px-6 md:px-12"
-                >
-                    <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-3">built for</p>
-                    <h2 className="text-2xl md:text-4xl font-black text-gray-900">
-                        businesses like <span className="text-gray-300">yours.</span>
-                    </h2>
-                </motion.div>
-
-                {/* Desktop/Tablet - Horizontal scrollable */}
-                <div className="hidden sm:block px-6 md:px-12">
-                    <div className="flex gap-4 overflow-x-auto scroll-smooth pb-4 snap-x snap-mandatory scrollbar-hide">
-                        {useCasesData.map((uc, i) => (
-                            <motion.div
-                                key={uc.name}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.3, delay: i * 0.04 }}
-                                className="snap-start flex-shrink-0 relative rounded-3xl overflow-hidden h-80 group cursor-pointer"
-                                style={{ width: 'calc(50% - 8px)', minWidth: '320px' }}
-                            >
-                                {/* Background Image */}
-                                <img
-                                    src={uc.image}
-                                    alt={uc.name}
-                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                />
-
-                                {/* Dark overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
-
-                                {/* Category tag - top left */}
-                                <div className="absolute top-5 left-5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
-                                    <span className="text-xs font-medium text-white">• {uc.category}</span>
-                                </div>
-
-                                {/* Content - bottom left */}
-                                <div className="absolute bottom-5 left-5 right-20 text-white">
-                                    <h3 className="text-xl font-bold mb-1">{uc.name}</h3>
-                                    <p className="text-sm text-white/80">Started by you. Accelerated with AI.</p>
-                                </div>
-
-                                {/* Read more button - bottom right */}
-                                {/* <button className="absolute bottom-5 right-5 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-200 group-hover:scale-110">
-                                    <Plus className="w-5 h-5 text-white" />
-                                </button> */}
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Mobile - One card at a time with swipe */}
-                <UseCasesCarousel useCases={useCasesData} />
+            {/* Use Cases — Netflix Showcase */}
+            <section className="w-full">
+                <NetflixShowcase cards={netflixCards} />
             </section>
 
             {/* Divider */}

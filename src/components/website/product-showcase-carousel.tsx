@@ -34,7 +34,7 @@ const M_CARD_H_NEXT = 200;
 const M_CARD_H_PEEK = 182;
 const M_CARD_H_FAR = 165;
 
-export default function ProductShowcaseCarousel({ products, autoPlayInterval = 5000 }: Props) {
+export default function  ProductShowcaseCarousel({ products, autoPlayInterval = 5000 }: Props) {
     const [active, setActive] = useState(0);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const touchStartX = useRef<number | null>(null);
