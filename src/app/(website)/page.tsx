@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Volume2, VolumeX, Send, Phone, MessageCircle, Camera, LayoutGrid, ArrowRight, ChevronRight, ShoppingCart, UtensilsCrossed, Scissors, Stethoscope, Store, Wrench, Plus, Zap, BarChart2, Shield, Globe, Clock, Headphones } from 'lucide-react';
 import FeaturesSection, { FeatureCard } from '@/components/website/features-section';
 import ProductShowcaseCarousel, { ShowcaseProduct } from '@/components/website/product-showcase-carousel';
-import NetflixShowcase, { NetflixCard } from '@/components/website/netflix-showcase';
+import UseCasesCarousel from '@/components/website/UseCasesCarousel';
 
 const stats = [
     { value: '50+', label: 'businesses powered' },
@@ -148,101 +148,15 @@ const useCasesData = [
     { name: 'Service Providers', icon: Wrench, image: '/images/agents/repair-agent.png', category: 'Services' },
 ];
 
-const netflixCards: NetflixCard[] = [
-    { name: 'Grocery Stores',     category: 'Retail',           tagline: 'Automate orders, manage inventory, and serve customers 24/7 with AI.',          image: '/images/homepage/smart.png',  color: '#22c55e' },
-    { name: 'Restaurants',        category: 'Food & Beverage',  tagline: 'Take reservations, handle menu queries, and process orders hands-free.',         image: '/images/homepage/cctv.png', color: '#f97316' },
-    { name: 'Salons & Spas',      category: 'Beauty',           tagline: 'Book appointments, send reminders, and delight clients with smart AI.',           image: '/images/homepage/RetailShops.png',    color: '#ec4899' },
-    { name: 'Clinics',            category: 'Healthcare',       tagline: 'Manage patient calls, schedule visits, and answer FAQs automatically.',           image: '/images/homepage/businessi.png',    color: '#06b6d4' },
-    { name: 'Retail Shops',       category: 'Commerce',         tagline: 'Showcase your catalog, process WhatsApp orders, and grow sales effortlessly.',    image: '/images/agents/ecommerce-agent.png',  color: '#a855f7' },
-    { name: 'Service Providers',  category: 'Services',         tagline: 'Dispatch jobs, follow up with clients, and never miss a lead again.',             image: '/images/agents/repair-agent.png',     color: '#eab308' },
-];
+// const netflixCards: NetflixCard[] = [
+//     { name: 'Grocery Stores',     category: 'Retail',           tagline: 'Automate orders, manage inventory, and serve customers 24/7 with AI.',          image: '/images/homepage/smart.png',  color: '#22c55e' },
+//     { name: 'Restaurants',        category: 'Food & Beverage',  tagline: 'Take reservations, handle menu queries, and process orders hands-free.',         image: '/images/homepage/cctv.png', color: '#f97316' },
+//     { name: 'Salons & Spas',      category: 'Beauty',           tagline: 'Book appointments, send reminders, and delight clients with smart AI.',           image: '/images/homepage/RetailShops.png',    color: '#ec4899' },
+//     { name: 'Clinics',            category: 'Healthcare',       tagline: 'Manage patient calls, schedule visits, and answer FAQs automatically.',           image: '/images/homepage/businessi.png',    color: '#06b6d4' },
+//     { name: 'Retail Shops',       category: 'Commerce',         tagline: 'Showcase your catalog, process WhatsApp orders, and grow sales effortlessly.',    image: '/images/agents/ecommerce-agent.png',  color: '#a855f7' },
+//     { name: 'Service Providers',  category: 'Services',         tagline: 'Dispatch jobs, follow up with clients, and never miss a lead again.',             image: '/images/agents/repair-agent.png',     color: '#eab308' },
+// ];
 
-function UseCasesCarousel({ useCases }: { useCases: typeof useCasesData }) {
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-    const total = useCases.length;
-
-    const scrollTo = (dir: 'prev' | 'next') => {
-        const el = scrollRef.current;
-        if (!el) return;
-        const cardWidth = el.offsetWidth - 32;
-        el.scrollBy({ left: dir === 'next' ? cardWidth + 16 : -(cardWidth + 16), behavior: 'smooth' });
-    };
-
-    const resetTimer = () => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        intervalRef.current = setInterval(() => {
-            const el = scrollRef.current;
-            if (!el) return;
-            const cardWidth = el.offsetWidth - 32;
-            const maxScroll = el.scrollWidth - el.offsetWidth;
-            if (el.scrollLeft >= maxScroll - 4) {
-                el.scrollTo({ left: 0, behavior: 'smooth' });
-            } else {
-                el.scrollBy({ left: cardWidth + 16, behavior: 'smooth' });
-            }
-        }, 3500);
-    };
-
-    useEffect(() => {
-        resetTimer();
-        return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [total]);
-
-    return (
-        <div className="sm:hidden relative">
-            <div
-                ref={scrollRef}
-                className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide gap-4 px-4"
-                onTouchStart={() => { if (intervalRef.current) clearInterval(intervalRef.current); }}
-                onTouchEnd={resetTimer}
-            >
-                {useCases.map((uc) => (
-                    <div key={uc.name} className="snap-center flex-shrink-0 w-[calc(100%-32px)]">
-                        <div className="relative rounded-3xl overflow-hidden h-80 cursor-pointer">
-                            <img
-                                src={uc.image}
-                                alt={uc.name}
-                                className="absolute inset-0 w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
-                            <div className="absolute top-5 left-5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
-                                <span className="text-xs font-medium text-white">• {uc.category}</span>
-                            </div>
-                            <div className="absolute bottom-5 left-5 right-20 text-white">
-                                <h3 className="text-xl font-bold mb-1">{uc.name}</h3>
-                                <p className="text-sm text-white/80">Started by you. Accelerated with AI.</p>
-                            </div>
-                            {/* <button className="absolute bottom-5 right-5 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center">
-                                <Plus className="w-5 h-5 text-white" />
-                            </button> */}
-                            {/* Arrows */}
-                            <button
-                                onClick={() => { scrollTo('prev'); resetTimer(); }}
-                                className="absolute left-0 bottom-[131px] w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center z-10"
-                                aria-label="Previous"
-                            >
-                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={() => { scrollTo('next'); resetTimer(); }}
-                                className="absolute right-0 bottom-[131px] w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center z-10"
-                                aria-label="Next"
-                            >
-                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-}
 
 export default function CommencePage() {
     const [isMuted, setIsMuted] = useState(true);
@@ -457,10 +371,8 @@ export default function CommencePage() {
             {/* Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
-            {/* Use Cases — Netflix Showcase */}
-            <section className="w-full">
-                <NetflixShowcase cards={netflixCards} />
-            </section>
+            {/* Use Cases — Accordion Carousel */}
+            <UseCasesCarousel />
 
             {/* Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
