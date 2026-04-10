@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ShoppingCart, UtensilsCrossed, Scissors, Stethoscope, Store, Wrench } from "lucide-react";
+import { ShoppingCart, UtensilsCrossed, Scissors, Stethoscope, Store, Wrench, X } from "lucide-react";
 
 const useCases = [
   { name: "Grocery Stores",    category: "Retail",          tagline: "Automate orders, manage inventory, and serve customers 24/7 with AI.",        icon: ShoppingCart,    image: "/images/homepage/smart.png" },
@@ -13,66 +13,62 @@ const useCases = [
 ];
 
 export default function UseCasesCarousel() {
-  const [active, setActive] = useState<number | null>(null);
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
   const isTouchDevice = useRef(false);
 
-  // Detect touch capability once on mount
   useEffect(() => {
     isTouchDevice.current = window.matchMedia("(hover: none)").matches;
   }, []);
 
+  const isAnyActive = selectedCard !== null;
+
+  // Desktop: hover expands/collapses
   const handleMouseEnter = (i: number) => {
-    if (!isTouchDevice.current) setActive(i);
+    if (!isTouchDevice.current) setSelectedCard(i);
   };
-
   const handleMouseLeave = () => {
-    if (!isTouchDevice.current) setActive(null);
+    if (!isTouchDevice.current) setSelectedCard(null);
   };
 
-  const handleClick = (i: number) => {
+  // Mobile: tap toggles; also works as fallback click on desktop
+  const handleCardClick = (i: number) => {
     if (isTouchDevice.current) {
-      setActive((prev) => (prev === i ? null : i));
+      setSelectedCard((prev) => (prev === i ? null : i));
     }
   };
 
-  const isAnyActive = active !== null;
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedCard(null);
+  };
 
   return (
     <section className="w-full bg-[#111] py-14 overflow-hidden">
-      {/* Heading */}
-      {/* <div className="text-center mb-10 px-4">
-        <p className="text-xs uppercase tracking-[0.3em] text-gray-500 mb-2">built for</p>
-        <h2 className="text-2xl md:text-4xl font-black text-white">
-          businesses like <span className="text-gray-400">yours.</span>
-        </h2>
-      </div> */}
-
-      {/* Track */}
-      <div className="w-full overflow-hidden">
+      {/* Grid layout */}
+      <div className="w-full px-4">
         <div
-          className="flex h-[440px] px-4"
+          className="flex h-[440px]"
           style={{ gap: "8px" }}
           onMouseLeave={handleMouseLeave}
         >
           {useCases.map((uc, i) => {
-            const isExpanded = active === i;
+            const isExpanded = selectedCard === i;
             const isHidden = isAnyActive && !isExpanded;
 
             return (
               <div
                 key={uc.name}
                 onMouseEnter={() => handleMouseEnter(i)}
-                onClick={() => handleClick(i)}
-                className="relative h-full cursor-pointer overflow-hidden rounded-xl"
+                onClick={() => handleCardClick(i)}
+                className="relative h-full overflow-hidden rounded-xl"
                 style={{
-                  flex: isHidden ? "0" : "1",
-                  width: isHidden ? "0px" : undefined,
+                  flex: isHidden ? "0 0 0px" : isExpanded ? "1 1 100%" : "1 1 0%",
                   minWidth: isHidden ? "0px" : undefined,
                   opacity: isHidden ? 0 : 1,
-                  // Keep pointer events on all cards so mobile taps register
-                  pointerEvents: "auto",
+                  cursor: "pointer",
+                  zIndex: isExpanded ? 10 : 1,
                   transition:
-                    "flex 0.55s cubic-bezier(0.4,0,0.2,1), width 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease",
+                    "flex 0.55s cubic-bezier(0.4,0,0.2,1), min-width 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease",
                   animation: `slideInCard 0.55s cubic-bezier(0.4,0,0.2,1) ${0.05 + i * 0.08}s both`,
                 }}
               >
@@ -80,7 +76,7 @@ export default function UseCasesCarousel() {
                 <div
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
-                  backgroundImage: `url(${uc.image})`,
+                    backgroundImage: `url(${uc.image})`,
                     transform: isExpanded ? "scale(1.04)" : "scale(1)",
                     transition: "transform 0.55s ease",
                   }}
@@ -97,7 +93,22 @@ export default function UseCasesCarousel() {
                   }}
                 />
 
-                {/* Category pill */}
+                {/* Close button — only visible when expanded */}
+                {isExpanded && (
+                  <button
+                    onClick={handleClose}
+                    aria-label="Close expanded card"
+                    className="absolute top-4 right-4 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white/15 border border-white/25 text-white hover:bg-white/25 transition-colors"
+                    style={{
+                      opacity: isExpanded ? 1 : 0,
+                      transition: "opacity 0.3s ease 0.3s",
+                    }}
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+
+                {/* Category pill — visible when expanded */}
                 <div
                   className="absolute top-[18px] left-[18px] whitespace-nowrap"
                   style={{
