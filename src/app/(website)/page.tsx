@@ -339,7 +339,61 @@ export default function CommencePage() {
                 </motion.div>
             </section>
             {/* Divider */}
-            {/* <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" /> */}
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+           <section className="w-full bg-[#f5f4f0] px-4 sm:px-6 md:px-12 py-14 sm:py-20 flex flex-col items-center text-center">
+
+                {/* Headline */}
+                <h2 className="text-3xl sm:text-5xl md:text-7xl font-black text-gray-900 leading-[1.05] tracking-tight max-w-3xl mb-8 sm:mb-10 px-2">
+                    The AI Voice Agent That Scales Last Mile Delivery
+                </h2>
+
+                {/* Demo CTA */}
+                <p className="text-gray-500 text-sm sm:text-base mb-4 sm:mb-5">Experience our demo!</p>
+
+                {/* Phone input pill */}
+                <div className="flex items-center w-full max-w-sm sm:max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 px-3 sm:px-4 py-2.5 sm:py-3 gap-2 sm:gap-3">
+                    {/* Flag + dial code */}
+                    <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 border-r border-gray-200 pr-2 sm:pr-3">
+                        <span className="text-lg sm:text-xl leading-none">🇮🇳</span>
+                        <span className="text-xs sm:text-sm text-gray-500 font-medium">+91</span>
+                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    {/* Number input */}
+                    <input
+                        type="tel"
+                        placeholder="Enter number"
+                        className="flex-1 min-w-0 bg-transparent outline-none text-gray-700 text-sm sm:text-base placeholder-gray-400"
+                    />
+
+                    {/* Call button */}
+                    <a
+                        href="/connect"
+                        aria-label="Request demo call"
+                        className="flex-shrink-0 bg-gray-900 text-white rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-center hover:bg-gray-700 transition-colors"
+                    >
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.47 11.47 0 00.57 3.58 1 1 0 01-.25 1.01l-2.2 2.2z" />
+                        </svg>
+                    </a>
+                </div>
+
+                {/* Stats strip */}
+                <div className="grid grid-cols-3 sm:flex sm:flex-row items-center justify-center gap-6 sm:gap-16 mt-10 sm:mt-14 w-full max-w-sm sm:max-w-none">
+                    {[
+                        { stat: '10,000+', label: 'Concurrent Calls' },
+                        { stat: '99.9%',   label: 'Adherence' },
+                        { stat: '20+',     label: 'Languages Supported' },
+                    ].map((item) => (
+                        <div key={item.label} className="text-center">
+                            <div className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900">{item.stat}</div>
+                            <div className="text-xs sm:text-sm text-gray-500 mt-1">{item.label}</div>
+                        </div>
+                    ))}
+                </div>
+            </section>
 
             {/* Product Showcase Carousel */}
             <section className="">
@@ -357,6 +411,62 @@ export default function CommencePage() {
                 </motion.div> */}
                 <ProductShowcaseCarousel products={showcaseProducts} autoPlayInterval={4500} />
             </section>
+
+            <section className="w-full bg-[#f5f4f0] px-4 sm:px-6 md:px-12 py-14 sm:py-20 flex flex-col items-center text-center">
+
+                {/* Headline */}
+                <h2 className="text-3xl sm:text-5xl md:text-7xl font-black text-gray-900 leading-[1.05] tracking-tight max-w-3xl mb-8 sm:mb-10 px-2">
+                    The AI Voice Agent That Scales Last Mile Delivery
+                </h2>
+
+                {/* Demo CTA */}
+                <p className="text-gray-500 text-sm sm:text-base mb-4 sm:mb-5">Experience our demo!</p>
+
+                {/* Phone input pill */}
+                <div className="flex items-center w-full max-w-sm sm:max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 px-3 sm:px-4 py-2.5 sm:py-3 gap-2 sm:gap-3">
+                    {/* Flag + dial code */}
+                    <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 border-r border-gray-200 pr-2 sm:pr-3">
+                        <span className="text-lg sm:text-xl leading-none">🇮🇳</span>
+                        <span className="text-xs sm:text-sm text-gray-500 font-medium">+91</span>
+                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    {/* Number input */}
+                    <input
+                        type="tel"
+                        placeholder="Enter number"
+                        className="flex-1 min-w-0 bg-transparent outline-none text-gray-700 text-sm sm:text-base placeholder-gray-400"
+                    />
+
+                    {/* Call button */}
+                    <a
+                        href="/connect"
+                        aria-label="Request demo call"
+                        className="flex-shrink-0 bg-gray-900 text-white rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-center hover:bg-gray-700 transition-colors"
+                    >
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.47 11.47 0 00.57 3.58 1 1 0 01-.25 1.01l-2.2 2.2z" />
+                        </svg>
+                    </a>
+                </div>
+
+                {/* Stats strip */}
+                <div className="grid grid-cols-3 sm:flex sm:flex-row items-center justify-center gap-6 sm:gap-16 mt-10 sm:mt-14 w-full max-w-sm sm:max-w-none">
+                    {[
+                        { stat: '10,000+', label: 'Concurrent Calls' },
+                        { stat: '99.9%',   label: 'Adherence' },
+                        { stat: '20+',     label: 'Languages Supported' },
+                    ].map((item) => (
+                        <div key={item.label} className="text-center">
+                            <div className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900">{item.stat}</div>
+                            <div className="text-xs sm:text-sm text-gray-500 mt-1">{item.label}</div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
 
             {/* Divider */}
             {/* <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" /> */}
