@@ -158,6 +158,243 @@ const useCasesData = [
 // ];
 
 
+// ─── Campaign Analytics Section ───────────────────────────────────────────────
+
+const funnelSteps = [
+    { label: 'Overview', pct: 100, count: '17,861', color: '#6b7280', icon: '▦' },
+    { label: 'Sent', pct: 100, count: '17.9K', color: '#6b7280', icon: '✓' },
+    { label: 'Delivered', pct: 97, count: '17.3K', color: '#10b981', icon: '✓✓' },
+    { label: 'Read', pct: 93, count: '16.6K', color: '#10b981', icon: '✓✓' },
+    { label: 'Clicked', pct: 45, count: '7.3K', color: '#8b5cf6', icon: '↑', active: true },
+    { label: 'Replied', pct: 42, count: '7.5K', color: '#6b7280', icon: '↩' },
+    { label: 'Failed', pct: 3, count: '535', color: '#ef4444', icon: '!' },
+];
+
+// Audience area chart data (23 Jan → 31 Jan)
+const audienceData = [
+    { day: '23 Jan', val: 400 },
+    { day: '24 Jan', val: 3100 },
+    { day: '25 Jan', val: 2800 },
+    { day: '25.5 Jan', val: 1800 },
+    { day: '26 Jan', val: 2450 },
+    { day: '27 Jan', val: 0 },
+    { day: '28 Jan', val: 0 },
+    { day: '29 Jan', val: 0 },
+    { day: '30 Jan', val: 0 },
+    { day: '31 Jan', val: 0 },
+];
+
+const yTicks = [0, 850, 1700, 2550, 3400];
+const xLabels = ['23 Jan', '24 Jan', '25 Jan', '26 Jan', '27 Jan', '28 Jan', '29 Jan', '30 Jan', '31 Jan'];
+
+function DonutChart({ pct, size = 80 }: { pct: number; size?: number }) {
+    const r = (size - 12) / 2;
+    const circ = 2 * Math.PI * r;
+    const dash = (pct / 100) * circ;
+    const [animated, setAnimated] = useState(false);
+    const ref = useRef<SVGSVGElement>(null);
+
+    useEffect(() => {
+        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setAnimated(true); }, { threshold: 0.5 });
+        if (ref.current) obs.observe(ref.current);
+        return () => obs.disconnect();
+    }, []);
+
+    return (
+        <div className="relative" style={{ width: size, height: size }}>
+            <svg ref={ref} width={size} height={size} className="-rotate-90">
+                <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#e5e7eb" strokeWidth="10" />
+                <circle
+                    cx={size / 2} cy={size / 2} r={r} fill="none"
+                    stroke="#8b5cf6" strokeWidth="10"
+                    strokeDasharray={`${animated ? dash : 0} ${circ}`}
+                    strokeLinecap="round"
+                    style={{ transition: 'stroke-dasharray 1s ease' }}
+                />
+            </svg>
+            <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-violet-600 rotate-0">
+                {pct}%
+            </span>
+        </div>
+    );
+}
+
+function AudienceChart() {
+    const W = 560; const H = 160; const PL = 44; const PR = 8; const PT = 8; const PB = 24;
+    const chartW = W - PL - PR; const chartH = H - PT - PB;
+    const maxVal = 3400;
+
+    const pts = audienceData.map((d, i) => ({
+        x: PL + (i / (audienceData.length - 1)) * chartW,
+        y: PT + chartH - (d.val / maxVal) * chartH,
+    }));
+
+    const smooth = (points: { x: number; y: number }[]) => {
+        return points.map((p, i) => {
+            if (i === 0) return `M ${p.x},${p.y}`;
+            const prev = points[i - 1];
+            const cpx = (prev.x + p.x) / 2;
+            return `C ${cpx},${prev.y} ${cpx},${p.y} ${p.x},${p.y}`;
+        }).join(' ');
+    };
+
+    const linePath = smooth(pts);
+    const areaPath = `${linePath} L ${pts[pts.length - 1].x},${PT + chartH} L ${pts[0].x},${PT + chartH} Z`;
+
+    const [tooltip, setTooltip] = useState<{ x: number; y: number; label: string; val: number } | null>(null);
+
+    return (
+        <div className="relative w-full overflow-x-auto">
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ minWidth: 280 }}>
+                <defs>
+                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.35" />
+                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.02" />
+                    </linearGradient>
+                </defs>
+
+                {/* Grid lines */}
+                {yTicks.map((t) => {
+                    const y = PT + chartH - (t / maxVal) * chartH;
+                    return (
+                        <g key={t}>
+                            <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="#e5e7eb" strokeWidth="0.8" strokeDasharray="3 3" />
+                            <text x={PL - 4} y={y + 4} textAnchor="end" fontSize="8" fill="#9ca3af">{t === 0 ? '0' : t >= 1000 ? `${t / 1000}k` : t}</text>
+                        </g>
+                    );
+                })}
+
+                {/* Area fill */}
+                <path d={areaPath} fill="url(#areaGrad)" />
+
+                {/* Line */}
+                <path d={linePath} fill="none" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+                {/* X labels */}
+                {xLabels.map((lbl, i) => {
+                    const x = PL + (i / (xLabels.length - 1)) * chartW;
+                    return <text key={lbl} x={x} y={H - 4} textAnchor="middle" fontSize="7.5" fill="#9ca3af">{lbl}</text>;
+                })}
+
+                {/* Interactive hit areas */}
+                {pts.map((p, i) => (
+                    <g key={i}>
+                        <rect
+                            x={p.x - 20} y={PT} width={40} height={chartH}
+                            fill="transparent"
+                            className="cursor-pointer"
+                            onMouseEnter={() => audienceData[i].val > 0 && setTooltip({ x: p.x, y: p.y, label: audienceData[i].day, val: audienceData[i].val })}
+                            onMouseLeave={() => setTooltip(null)}
+                            onTouchStart={() => audienceData[i].val > 0 && setTooltip({ x: p.x, y: p.y, label: audienceData[i].day, val: audienceData[i].val })}
+                            onTouchEnd={() => setTimeout(() => setTooltip(null), 1500)}
+                        />
+                        {audienceData[i].val > 0 && (
+                            <circle cx={p.x} cy={p.y} r="3" fill="#8b5cf6" stroke="white" strokeWidth="1.5"
+                                className="pointer-events-none" />
+                        )}
+                    </g>
+                ))}
+
+                {/* Tooltip */}
+                {tooltip && (
+                    <g>
+                        <rect x={tooltip.x - 28} y={tooltip.y - 26} width={56} height={20} rx="4" fill="#1e1b4b" />
+                        <text x={tooltip.x} y={tooltip.y - 12} textAnchor="middle" fontSize="8.5" fill="white" fontWeight="600">
+                            {tooltip.val.toLocaleString()}
+                        </text>
+                    </g>
+                )}
+
+                {/* Legend */}
+                <g transform={`translate(${PL + chartW / 2 - 22}, ${H - 6})`}>
+                    <line x1="0" y1="-2" x2="8" y2="-2" stroke="#8b5cf6" strokeWidth="1.5" />
+                    <circle cx="4" cy="-2" r="2" fill="#8b5cf6" />
+                    <text x="11" y="1" fontSize="7.5" fill="#6b7280">clicked</text>
+                </g>
+            </svg>
+        </div>
+    );
+}
+
+function FunnelBar() {
+    const [active, setActive] = useState(4);
+
+    return (
+        <div className="flex items-stretch divide-x divide-gray-100 overflow-x-auto scrollbar-hide">
+            {funnelSteps.map((s, i) => (
+                <button
+                    key={s.label}
+                    onClick={() => setActive(i)}
+                    className={`flex-1 min-w-[72px] px-3 py-2.5 text-left transition-colors duration-150 focus:outline-none
+                        ${active === i ? 'bg-violet-50' : 'bg-white hover:bg-gray-50'}`}
+                >
+                    <div className={`text-xs font-bold mb-0.5 ${active === i ? 'text-violet-700' : 'text-gray-700'}`}>
+                        {s.pct}%
+                        <span className="font-normal text-gray-400 ml-1">({s.count})</span>
+                    </div>
+                    <div className={`flex items-center gap-1 text-[10px] ${active === i ? 'text-violet-500' : 'text-gray-400'}`}>
+                        <span style={{ color: s.color }}>{s.icon}</span>
+                        {s.label}
+                    </div>
+                </button>
+            ))}
+        </div>
+    );
+}
+
+function CampaignAnalyticsSection() {
+    return (
+        <section className="w-full bg-[#f5f4f0] px-4 sm:px-6 md:px-12 py-14 sm:py-20 flex flex-col items-center text-center">
+            <h3 className="text-xl font-black text-gray-900 leading-[1.05] tracking-tight max-w-3xl mb-8 sm:mb-10 px-2">
+                Your AI voice agent handled 87% of calls automatically today. Your business runs even when you don't.
+            </h3>
+
+            <div className="w-full  flex flex-col gap-3">
+                  {/* Funnel stats bar */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <FunnelBar />
+                </div>
+                {/* Campaign info + Audience chart — stacked on mobile, side-by-side on md+ */}
+                <div className="flex flex-col md:flex-row gap-3">
+                    {/* Campaign info card */}
+                    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-100 shadow-sm md:w-72 lg:w-80 flex-shrink-0">
+                        <div className="flex items-start justify-between gap-4">
+                            <div className="grid grid-cols-2 gap-x-6 gap-y-3 flex-1 text-left">
+                                <div>
+                                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Campaign Name</p>
+                                    <p className="text-sm font-semibold text-gray-800">Republic_Day_Sale</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Sent On</p>
+                                    <p className="text-sm font-semibold text-gray-800">23rd January, 2024</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">CTA (URL)</p>
+                                    <p className="text-sm font-semibold text-gray-800">Shop Now</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Campaign Duration</p>
+                                    <p className="text-sm font-semibold text-gray-800">0:00:57</p>
+                                </div>
+                            </div>
+                            <DonutChart pct={45} size={80} />
+                        </div>
+                    </div>
+
+                    {/* Audience chart card */}
+                    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-100 shadow-sm flex-1 text-left">
+                        <p className="text-sm font-semibold text-gray-800 mb-3">Audience <span className="text-gray-400 font-normal">(per day)</span></p>
+                        <AudienceChart />
+                    </div>
+                </div>
+
+              
+            </div>
+                    </section>
+    );
+}
+
+
 export default function CommencePage() {
     const [isMuted, setIsMuted] = useState(true);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -340,78 +577,6 @@ export default function CommencePage() {
             </section>
             {/* Divider */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-           <section className="w-full bg-[#f5f4f0] px-4 sm:px-6 md:px-12 py-14 sm:py-20 flex flex-col items-center text-center">
-
-                {/* Headline */}
-                <h2 className="text-3xl sm:text-5xl md:text-7xl font-black text-gray-900 leading-[1.05] tracking-tight max-w-3xl mb-8 sm:mb-10 px-2">
-                    The AI Voice Agent That Scales Last Mile Delivery
-                </h2>
-
-                {/* Demo CTA */}
-                <p className="text-gray-500 text-sm sm:text-base mb-4 sm:mb-5">Experience our demo!</p>
-
-                {/* Phone input pill */}
-                <div className="flex items-center w-full max-w-sm sm:max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 px-3 sm:px-4 py-2.5 sm:py-3 gap-2 sm:gap-3">
-                    {/* Flag + dial code */}
-                    <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 border-r border-gray-200 pr-2 sm:pr-3">
-                        <span className="text-lg sm:text-xl leading-none">🇮🇳</span>
-                        <span className="text-xs sm:text-sm text-gray-500 font-medium">+91</span>
-                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-
-                    {/* Number input */}
-                    <input
-                        type="tel"
-                        placeholder="Enter number"
-                        className="flex-1 min-w-0 bg-transparent outline-none text-gray-700 text-sm sm:text-base placeholder-gray-400"
-                    />
-
-                    {/* Call button */}
-                    <a
-                        href="/connect"
-                        aria-label="Request demo call"
-                        className="flex-shrink-0 bg-gray-900 text-white rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-center hover:bg-gray-700 transition-colors"
-                    >
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.47 11.47 0 00.57 3.58 1 1 0 01-.25 1.01l-2.2 2.2z" />
-                        </svg>
-                    </a>
-                </div>
-
-                {/* Stats strip */}
-                <div className="grid grid-cols-3 sm:flex sm:flex-row items-center justify-center gap-6 sm:gap-16 mt-10 sm:mt-14 w-full max-w-sm sm:max-w-none">
-                    {[
-                        { stat: '10,000+', label: 'Concurrent Calls' },
-                        { stat: '99.9%',   label: 'Adherence' },
-                        { stat: '20+',     label: 'Languages Supported' },
-                    ].map((item) => (
-                        <div key={item.label} className="text-center">
-                            <div className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900">{item.stat}</div>
-                            <div className="text-xs sm:text-sm text-gray-500 mt-1">{item.label}</div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Product Showcase Carousel */}
-            <section className="">
-                {/* <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center  px-6 md:px-12  bg-black/40 backdrop-blur-md"
-                >
-                    <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-3">built for</p>
-                    <h2 className="text-2xl md:text-4xl font-black text-gray-900">
-                        businesses like <span className="text-gray-300">yours.</span>
-                    </h2>
-                </motion.div> */}
-                <ProductShowcaseCarousel products={showcaseProducts} autoPlayInterval={4500} />
-            </section>
-
             <section className="w-full bg-[#f5f4f0] px-4 sm:px-6 md:px-12 py-14 sm:py-20 flex flex-col items-center text-center">
 
                 {/* Headline */}
@@ -456,8 +621,8 @@ export default function CommencePage() {
                 <div className="grid grid-cols-3 sm:flex sm:flex-row items-center justify-center gap-6 sm:gap-16 mt-10 sm:mt-14 w-full max-w-sm sm:max-w-none">
                     {[
                         { stat: '10,000+', label: 'Concurrent Calls' },
-                        { stat: '99.9%',   label: 'Adherence' },
-                        { stat: '20+',     label: 'Languages Supported' },
+                        { stat: '99.9%', label: 'Adherence' },
+                        { stat: '20+', label: 'Languages Supported' },
                     ].map((item) => (
                         <div key={item.label} className="text-center">
                             <div className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900">{item.stat}</div>
@@ -466,6 +631,25 @@ export default function CommencePage() {
                     ))}
                 </div>
             </section>
+
+            {/* Product Showcase Carousel */}
+            <section className="">
+                {/* <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center  px-6 md:px-12  bg-black/40 backdrop-blur-md"
+                >
+                    <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-3">built for</p>
+                    <h2 className="text-2xl md:text-4xl font-black text-gray-900">
+                        businesses like <span className="text-gray-300">yours.</span>
+                    </h2>
+                </motion.div> */}
+                <ProductShowcaseCarousel products={showcaseProducts} autoPlayInterval={4500} />
+            </section>
+
+            <CampaignAnalyticsSection />
 
 
             {/* Divider */}

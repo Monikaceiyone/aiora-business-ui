@@ -17,25 +17,45 @@ export default function UseCasesCarousel() {
   const isTouchDevice = useRef(false);
 
   useEffect(() => {
-    isTouchDevice.current = window.matchMedia("(hover: none)").matches;
+    // isTouchDevice.current = window.matchMedia("(hover: none)").matches;
+
+     const hasHover = window.matchMedia("(hover: hover)").matches;
+  const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+
+  // Only treat as touch-only if NO hover + NO fine pointer
+  isTouchDevice.current = !(hasHover && hasFinePointer);
   }, []);
 
   const isAnyActive = selectedCard !== null;
 
   // Desktop: hover expands/collapses
-  const handleMouseEnter = (i: number) => {
-    if (!isTouchDevice.current) setSelectedCard(i);
-  };
-  const handleMouseLeave = () => {
-    if (!isTouchDevice.current) setSelectedCard(null);
-  };
+  // const handleMouseEnter = (i: number) => {
+  //   if (!isTouchDevice.current) setSelectedCard(i);
+  // };
+  // const handleMouseLeave = () => {
+  //   if (!isTouchDevice.current) setSelectedCard(null);
+  // };
 
-  // Mobile: tap toggles; also works as fallback click on desktop
-  const handleCardClick = (i: number) => {
-    if (isTouchDevice.current) {
-      setSelectedCard((prev) => (prev === i ? null : i));
-    }
-  };
+  // // Mobile: tap toggles; also works as fallback click on desktop
+  // const handleCardClick = (i: number) => {
+  //   if (isTouchDevice.current) {
+  //     setSelectedCard((prev) => (prev === i ? null : i));
+  //   }
+  // };
+
+  const handleMouseEnter = (i: number) => {
+  if (!isTouchDevice.current) setSelectedCard(i);
+};
+
+const handleMouseLeave = () => {
+  if (!isTouchDevice.current) setSelectedCard(null);
+};
+
+const handleCardClick = (i: number) => {
+  if (isTouchDevice.current) {
+    setSelectedCard((prev) => (prev === i ? null : i));
+  }
+};
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
